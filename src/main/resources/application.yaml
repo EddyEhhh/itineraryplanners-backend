@@ -2,10 +2,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+    show-sql: true
   datasource:
     url: jdbc:mysql://${database.host}:${database.port}/${database.schema}
     username: ${database.username}
     password: ${database.password}
-    driverClassName: com.mysql.jdbc.Driver
-    show-sql: true
+    driverClassName: com.mysql.cj.jdbc.Driver
+
 
