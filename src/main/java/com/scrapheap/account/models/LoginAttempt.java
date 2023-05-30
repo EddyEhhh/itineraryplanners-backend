@@ -23,8 +23,8 @@ public class LoginAttempt {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private int numberOfAttempts = 0;
+    private int numberOfAttempts;
 
-    private LocalDateTime timestamp;
+    private LocalDateTime lastAttempt;
 
 }
