@@ -1,7 +1,7 @@
 package com.scrapheap.account.config;
 
 import com.scrapheap.account.model.*;
-import com.scrapheap.account.repositories.AccountRepository;
+import com.scrapheap.account.repository.AccountRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;

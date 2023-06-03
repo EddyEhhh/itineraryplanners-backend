@@ -1,4 +1,4 @@
-package com.scrapheap.account.repositories;
+package com.scrapheap.account.repository;
 
 import com.scrapheap.account.model.Account;
 import com.scrapheap.account.model.LoginAttempt;
