@@ -1,4 +1,4 @@
-package com.scrapheap.account.models;
+package com.scrapheap.account.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

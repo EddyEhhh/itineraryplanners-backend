@@ -1,10 +1,6 @@
-package com.scrapheap.account.models;
+package com.scrapheap.account.model;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,14 +13,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LoginAttempt {
+public class Session {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private int numberOfAttempts;
+    private String token;
 
-    private LocalDateTime lastAttempt;
+    private LocalDateTime timestamp;
+
+    @OneToOne(mappedBy = "session",
+            cascade=CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    private Account account;
 
 }

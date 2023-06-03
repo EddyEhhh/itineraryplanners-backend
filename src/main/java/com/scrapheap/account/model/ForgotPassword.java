@@ -1,4 +1,4 @@
-package com.scrapheap.account.models;
+package com.scrapheap.account.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
