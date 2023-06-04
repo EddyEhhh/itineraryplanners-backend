@@ -37,7 +37,6 @@ public class Account {
 
     private String imageUrl = null;
 
-    @NotNull
     private LocalDateTime created;
 
     @OneToOne(cascade=CascadeType.ALL,

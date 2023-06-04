@@ -13,4 +13,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     public List<Account> findByEmailAndIsDeletedFalse(String email);
 
+
 }
