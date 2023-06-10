@@ -9,7 +9,9 @@ import java.util.List;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    public List<Account> findByUsernameAndIsDeletedFalse(String username);
+    public Account findByUsernameAndIsDeletedFalse(String username);
+
+    public Account findByUsername(String username);
 
     public List<Account> findByEmailAndIsDeletedFalse(String email);
 

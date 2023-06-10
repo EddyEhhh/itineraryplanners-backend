@@ -64,8 +64,6 @@ public class Account {
     @JoinColumn(name = "session", referencedColumnName = "id")
     private Session session;
 
-
-
     private boolean isDeleted = false;
 
     private LocalDateTime deletedAt;

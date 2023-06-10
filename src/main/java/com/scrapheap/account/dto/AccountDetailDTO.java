@@ -1,5 +1,7 @@
 package com.scrapheap.account.dto;
 
+import com.scrapheap.account.model.LoginAttempt;
+import com.scrapheap.account.model.Setting;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,10 +23,9 @@ public class AccountDetailDTO {
 
     private LocalDateTime created;
 
-//    private LoginAttempt loginAttempt;
-//
-//
-//    private Setting setting;
+    private LoginAttempt loginAttempt;
+
+    private Setting setting;
 
 
 }
