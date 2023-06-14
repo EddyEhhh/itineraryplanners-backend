@@ -35,38 +35,43 @@ public class Account {
     @NotEmpty
     private String password;
 
-    private String imageUrl = null;
+    private String imageUrl;
 
     private LocalDateTime created;
+
+    private String role;
 
     @OneToOne(cascade=CascadeType.ALL,
             fetch = FetchType.LAZY,
             orphanRemoval = true)
-    @JoinColumn(name = "loginAttempt",
+    @JoinColumn(
             referencedColumnName = "id")
     private LoginAttempt loginAttempt;
 
     @OneToOne(cascade=CascadeType.ALL,
             fetch = FetchType.LAZY,
             orphanRemoval = true)
-    @JoinColumn(name = "setting",
+    @JoinColumn(
             referencedColumnName = "id")
     private Setting setting;
 
     @OneToOne(cascade=CascadeType.ALL,
             fetch = FetchType.LAZY,
             orphanRemoval = true)
-    @JoinColumn(name = "forgotPassword",
+    @JoinColumn(
             referencedColumnName = "id")
     private ForgotPassword forgotPassword;
+
+    @OneToOne(mappedBy = "account")
+    private VerificationToken verificationToken;
 
     @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "session", referencedColumnName = "id")
     private Session session;
 
+    private boolean isVerified;
 
-
-    private boolean isDeleted = false;
+    private boolean isDeleted;
 
     private LocalDateTime deletedAt;
 

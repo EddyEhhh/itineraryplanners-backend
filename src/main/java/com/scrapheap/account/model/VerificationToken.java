@@ -1,7 +1,6 @@
 package com.scrapheap.account.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,20 +13,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ForgotPassword {
+public class VerificationToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotEmpty
     private String token;
 
-    @NotEmpty
-    private LocalDateTime expirationTime;
+    private LocalDateTime expirationTimestamp;
 
-    @OneToOne(mappedBy = "forgotPassword")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(referencedColumnName = "id")
     private Account account;
-
 
 }

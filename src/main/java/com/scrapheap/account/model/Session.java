@@ -23,6 +23,8 @@ public class Session {
 
     private LocalDateTime timestamp;
 
+    private LocalDateTime expirationTimestamp;
+
     @OneToOne(mappedBy = "session",
             cascade=CascadeType.ALL,
             fetch = FetchType.LAZY)

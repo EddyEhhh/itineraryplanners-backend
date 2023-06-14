@@ -56,7 +56,7 @@ class AccountRepositoryTest {
 
         LoginAttempt loginAttempt = LoginAttempt.builder().
                 numberOfAttempts(0).
-                lastAttempt(currentTime).
+                lastAttemptTimestamp(currentTime).
                 build();
 
         Setting setting = Setting.builder().

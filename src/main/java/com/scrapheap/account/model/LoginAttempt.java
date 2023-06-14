@@ -25,6 +25,6 @@ public class LoginAttempt {
 
     private int numberOfAttempts;
 
-    private LocalDateTime lastAttempt;
+    private LocalDateTime lastAttemptTimestamp;
 
 }
