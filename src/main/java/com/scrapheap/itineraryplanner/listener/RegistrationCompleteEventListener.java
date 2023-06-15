@@ -1,10 +1,9 @@
-package com.scrapheap.account.listener;
+package com.scrapheap.itineraryplanner.listener;
 
-import com.scrapheap.account.event.RegistrationCompleteEvent;
-import com.scrapheap.account.model.Account;
-import com.scrapheap.account.model.VerificationToken;
-import com.scrapheap.account.repository.VerificationTokenRepository;
-import com.scrapheap.account.service.AccountService;
+import com.scrapheap.itineraryplanner.event.RegistrationCompleteEvent;
+import com.scrapheap.itineraryplanner.model.Account;
+import com.scrapheap.itineraryplanner.repository.VerificationTokenRepository;
+import com.scrapheap.itineraryplanner.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;

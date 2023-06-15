@@ -1,7 +1,6 @@
-package com.scrapheap.account.repository;
+package com.scrapheap.itineraryplanner.repository;
 
-import com.scrapheap.account.model.Account;
-import com.scrapheap.account.model.VerificationToken;
+import com.scrapheap.itineraryplanner.model.VerificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

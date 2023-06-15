@@ -1,7 +1,7 @@
-package com.scrapheap.account.dto;
+package com.scrapheap.itineraryplanner.dto;
 
-import com.scrapheap.account.model.LoginAttempt;
-import com.scrapheap.account.model.Setting;
+import com.scrapheap.itineraryplanner.model.LoginAttempt;
+import com.scrapheap.itineraryplanner.model.Setting;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

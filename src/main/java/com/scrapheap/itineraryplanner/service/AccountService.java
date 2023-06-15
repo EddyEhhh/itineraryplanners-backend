@@ -1,17 +1,16 @@
-package com.scrapheap.account.service;
+package com.scrapheap.itineraryplanner.service;
 
-import com.scrapheap.account.dto.AccountCreateDTO;
-import com.scrapheap.account.dto.AccountDetailDTO;
-import com.scrapheap.account.event.RegistrationCompleteEvent;
-import com.scrapheap.account.model.Account;
-import com.scrapheap.account.model.VerificationToken;
-import com.scrapheap.account.repository.AccountRepository;
-import com.scrapheap.account.repository.VerificationTokenRepository;
-import com.scrapheap.account.util.LocalDateTimeUtil;
+import com.scrapheap.itineraryplanner.dto.AccountCreateDTO;
+import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
+import com.scrapheap.itineraryplanner.event.RegistrationCompleteEvent;
+import com.scrapheap.itineraryplanner.model.Account;
+import com.scrapheap.itineraryplanner.model.VerificationToken;
+import com.scrapheap.itineraryplanner.repository.AccountRepository;
+import com.scrapheap.itineraryplanner.repository.VerificationTokenRepository;
+import com.scrapheap.itineraryplanner.util.LocalDateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,9 +20,7 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class AccountService {
@@ -34,35 +31,13 @@ public class AccountService {
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
     public String folderPath = "C:\\Users\\XXX\\Pictures\\"; // dummy folderpath
 
-    public boolean createAccount(AccountCreateDTO accountDTO, String applicationUrl){
-        String defaultRole = "USER";
-        LocalDateTime timeNow = LocalDateTime.now();
-        Account account = Account.builder().
-                displayName(accountDTO.getDisplayName()).
-                email(accountDTO.getEmail()).
-                username(accountDTO.getUsername()).
-                password(passwordEncoder.encode(accountDTO.getPassword())).
-                role(defaultRole).
-                build();
 
-        applicationEventPublisher.publishEvent(new RegistrationCompleteEvent(account,
-                applicationUrl));
-
-
-
-        accountRepository.save(account);
-
-
-        return true;
-    }
 
     public List<AccountDetailDTO> getAccounts(){
         List<Account> accounts = accountRepository.findAll();
@@ -126,8 +101,6 @@ public class AccountService {
 
         return verificationToken;
     }
-
-
 
     public String deleteAccount(String username) {
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);

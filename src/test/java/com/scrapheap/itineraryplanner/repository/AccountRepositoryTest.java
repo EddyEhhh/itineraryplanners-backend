@@ -1,8 +1,8 @@
-package com.scrapheap.account.repository;
+package com.scrapheap.itineraryplanner.repository;
 
-import com.scrapheap.account.model.Account;
-import com.scrapheap.account.model.LoginAttempt;
-import com.scrapheap.account.model.Setting;
+import com.scrapheap.itineraryplanner.model.Account;
+import com.scrapheap.itineraryplanner.model.LoginAttempt;
+import com.scrapheap.itineraryplanner.model.Setting;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +34,7 @@ class AccountRepositoryTest {
     @Test
     public void printUserByEmail(){
         saveAccount();
-        List<Account> accounts = accountRepository.findByEmailAndIsDeletedFalse("User@bmail.com");
+        Account accounts = accountRepository.findByEmailAndIsDeletedFalse("User@bmail.com");
         System.out.println(accounts);
     }
 

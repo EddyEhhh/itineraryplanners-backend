@@ -1,7 +1,6 @@
-package com.scrapheap.account.model;
+package com.scrapheap.itineraryplanner.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,20 +13,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ForgotPassword {
+public class Session {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotEmpty
     private String token;
 
-    @NotEmpty
-    private LocalDateTime expirationTime;
+    private LocalDateTime timestamp;
 
-    @OneToOne(mappedBy = "forgotPassword")
+    private LocalDateTime expirationTimestamp;
+
+    @OneToOne(mappedBy = "session",
+            cascade=CascadeType.ALL,
+            fetch = FetchType.LAZY)
     private Account account;
-
 
 }

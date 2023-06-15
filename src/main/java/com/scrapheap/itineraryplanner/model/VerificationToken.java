@@ -1,4 +1,4 @@
-package com.scrapheap.account.model;
+package com.scrapheap.itineraryplanner.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

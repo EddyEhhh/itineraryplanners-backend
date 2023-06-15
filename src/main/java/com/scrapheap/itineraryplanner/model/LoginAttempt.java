@@ -1,4 +1,5 @@
-package com.scrapheap.account.model;
+package com.scrapheap.itineraryplanner.model;
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,19 +10,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Setting {
+public class LoginAttempt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String language;
+    private int numberOfAttempts;
 
-    private String theme;
+    private LocalDateTime lastAttemptTimestamp;
 
 }

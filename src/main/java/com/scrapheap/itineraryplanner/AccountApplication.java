@@ -1,8 +1,7 @@
-package com.scrapheap.account;
+package com.scrapheap.itineraryplanner;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
 @SpringBootApplication
 public class AccountApplication {

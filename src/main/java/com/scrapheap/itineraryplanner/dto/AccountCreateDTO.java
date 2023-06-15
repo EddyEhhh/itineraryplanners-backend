@@ -1,4 +1,4 @@
-package com.scrapheap.account.dto;
+package com.scrapheap.itineraryplanner.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

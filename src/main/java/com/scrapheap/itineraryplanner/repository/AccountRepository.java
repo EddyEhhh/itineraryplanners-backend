@@ -1,10 +1,12 @@
-package com.scrapheap.account.repository;
+package com.scrapheap.itineraryplanner.repository;
 
-import com.scrapheap.account.model.Account;
+import com.scrapheap.itineraryplanner.model.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
@@ -13,7 +15,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     public Account findByUsername(String username);
 
-    public List<Account> findByEmailAndIsDeletedFalse(String email);
+    public Account findByEmailAndIsDeletedFalse(String email);
 
 
 }

@@ -1,6 +1,6 @@
-package com.scrapheap.account.event;
+package com.scrapheap.itineraryplanner.event;
 
-import com.scrapheap.account.model.Account;
+import com.scrapheap.itineraryplanner.model.Account;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;

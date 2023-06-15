@@ -1,4 +1,4 @@
-package com.scrapheap.account.util;
+package com.scrapheap.itineraryplanner.util;
 
 import java.time.LocalDateTime;
 
