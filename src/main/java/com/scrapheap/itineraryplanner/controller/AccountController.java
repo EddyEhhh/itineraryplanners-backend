@@ -1,9 +1,8 @@
 package com.scrapheap.itineraryplanner.controller;
 
-import com.scrapheap.itineraryplanner.dto.AccountCreateDTO;
 import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
 import com.scrapheap.itineraryplanner.service.AccountService;
-import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/accounts")
+@Slf4j
 public class AccountController {
 
     @Autowired
@@ -23,6 +23,7 @@ public class AccountController {
 
     @GetMapping
     public List<AccountDetailDTO> getAcccounts(){
+        log.info(accountService.getAccounts().toString());
         return accountService.getAccounts();
     }
 

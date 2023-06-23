@@ -20,7 +20,8 @@ public class WebSecurityConfig {
     private static final String[] WHITELIST_URL = {
 //            "/login",
 //            "/api/v1/accounts/**",
-            "/api/v1/auth/**"
+            "/api/v1/auth/**",
+//            "/api/v1/demo"
     };
     private final JwtAuthenticationFilter jwtAuthFilter;
 
@@ -34,8 +35,8 @@ public class WebSecurityConfig {
                 .requestMatchers(WHITELIST_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .authenticationProvider(authenticationProvider)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
