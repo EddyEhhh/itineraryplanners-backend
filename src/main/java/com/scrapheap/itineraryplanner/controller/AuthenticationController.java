@@ -7,8 +7,10 @@ import com.scrapheap.itineraryplanner.dto.AuthenticationResponseDTO;
 import com.scrapheap.itineraryplanner.service.AccountService;
 import com.scrapheap.itineraryplanner.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,13 +29,13 @@ public class AuthenticationController {
 //    }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody AccountCreateDTO accountDTO, final HttpServletRequest request) {
+    public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody @Valid AccountCreateDTO accountDTO, final HttpServletRequest request) {
         String applicationUrl = getApplicationUrl(request);
         return ResponseEntity.ok(authenticationService.register(accountDTO, applicationUrl));
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody AccountCredentialDTO accountDTO, final HttpServletRequest request) {
+    @PostMapping
+    public ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody @Valid AccountCredentialDTO accountDTO, final HttpServletRequest request) {
         String applicationUrl = getApplicationUrl(request);
         return ResponseEntity.ok(authenticationService.authenticate(accountDTO));
     }

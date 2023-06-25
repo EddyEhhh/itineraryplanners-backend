@@ -11,3 +11,17 @@ spring:
     username: ${database.username}
     password: ${database.password}
     driverClassName: com.mysql.cj.jdbc.Driver
+  mail:
+    host: ${mail.host}
+    port: ${mail.port}
+    username: ${mail.email}
+    password: ${mail.password}
+    protocol: smtps
+    properties:
+      mail:
+        smtps:
+          auth: ${mail.properties.mail.smtp.auth}
+        starttls:
+          enable: ${mail.properties.mail.smtp.auth.starttls.enable}
+
+

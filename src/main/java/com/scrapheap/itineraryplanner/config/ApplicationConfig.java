@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,12 +35,12 @@ public class ApplicationConfig {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                Account account = accountRepository.findByEmailAndIsDeletedFalse(username);
+                Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
                 if(account == null){
                     throw new UsernameNotFoundException("No user found");
                 }
                 return new User(
-                        account.getEmail(),
+                        account.getUsername(),
                         account.getPassword(),
                         true,
                         true,
@@ -75,5 +77,7 @@ public class ApplicationConfig {
         }
         return authorities;
     }
+
+
 
 }

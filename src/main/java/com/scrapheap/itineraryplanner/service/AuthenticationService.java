@@ -61,22 +61,21 @@ public class AuthenticationService {
 
         accountRepository.save(account);
 
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(accountDTO.getEmail());
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(accountDTO.getUsername());
         var jwtToken = jwtService.generateToken(userDetails);
         return AuthenticationResponseDTO.builder()
                 .token(jwtToken)
                 .build();
-
     }
 
     public AuthenticationResponseDTO authenticate(AccountCredentialDTO accountDTO){
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        accountDTO.getEmail(),
+                        accountDTO.getUsername(),
                         accountDTO.getPassword()
                 )
         );
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(accountDTO.getEmail());
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(accountDTO.getUsername());
         if(userDetails == null){
             throw new UsernameNotFoundException("No user found");
         }
