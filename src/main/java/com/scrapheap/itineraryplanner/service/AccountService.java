@@ -1,6 +1,5 @@
 package com.scrapheap.itineraryplanner.service;
 
-import com.scrapheap.itineraryplanner.dto.AccountCreateDTO;
 import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
 import com.scrapheap.itineraryplanner.event.RegistrationCompleteEvent;
 import com.scrapheap.itineraryplanner.model.Account;
@@ -10,7 +9,6 @@ import com.scrapheap.itineraryplanner.repository.VerificationTokenRepository;
 import com.scrapheap.itineraryplanner.util.LocalDateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +34,6 @@ public class AccountService {
     private ApplicationEventPublisher applicationEventPublisher;
 
     public String folderPath = "C:\\Users\\XXX\\Pictures\\"; // dummy folderpath
-
 
 
     public List<AccountDetailDTO> getAccounts(){
@@ -70,11 +67,11 @@ public class AccountService {
 
     }
 
-    public String validateVerficiationToken(String token){
+    public boolean validateVerficiationToken(String token){
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
 
         if(verificationToken == null){
-            return "invalid";
+            throw new IllegalArgumentException("Token not found");
         }
 
         Account account = verificationToken.getAccount();
@@ -82,14 +79,14 @@ public class AccountService {
 
         if(verificationToken.getExpirationTimestamp().isBefore(LocalDateTime.now())){
 //            verificationTokenRepository.delete(verificationToken);
-            return "expired";
+            throw new IllegalArgumentException("Token expired");
         }
 
 
         account.setVerified(true);
         verificationTokenRepository.delete(verificationToken);
         accountRepository.save(account);
-        return "valid";
+        return true;
     }
 
     public VerificationToken generateNewVerificationToken(String oldToken, String applicationUrl){

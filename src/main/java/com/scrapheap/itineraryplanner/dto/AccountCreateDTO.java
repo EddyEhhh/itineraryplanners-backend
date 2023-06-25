@@ -16,6 +16,7 @@ public class AccountCreateDTO {
     private String displayName;
 
     @Email(message = "authenticate.validation.error.email.invalid")
+    @NotBlank(message = "authenticate.validation.error.email.blank")
     private String email;
 
     @NotBlank(message = "authenticate.validation.error.username.blank")

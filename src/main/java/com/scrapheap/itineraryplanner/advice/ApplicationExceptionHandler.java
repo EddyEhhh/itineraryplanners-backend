@@ -17,7 +17,7 @@ public class ApplicationExceptionHandler {
     public Map<String, String> handleInvalidArguments(MethodArgumentNotValidException ex) {
         Map<String, String> errorMap = new HashMap<String, String>();
         ex.getBindingResult().getFieldErrors().forEach(error -> {
-            errorMap.put(error.getField(), error.getDefaultMessage());
+            errorMap.put(String.format("%s%s", error.getField(), "ErrorMessage"), error.getDefaultMessage());
         });
         return errorMap;
     }

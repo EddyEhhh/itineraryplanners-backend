@@ -9,6 +9,8 @@ import com.scrapheap.itineraryplanner.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpCookie;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -42,15 +44,13 @@ public class AuthenticationController {
 
 
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/verify")
-    public String verifyRegistration(@RequestParam("token") String token){
-        String result = accountService.validateVerficiationToken(token);
-        if(result.equalsIgnoreCase("valid")){
-            return "success";
-        }
-        return "invalid token";
+    public void verifyRegistration(@RequestParam("token") String token){
+        accountService.validateVerficiationToken(token);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/resendVerify")
     public void resendVerifyRegistration(@RequestParam("token") String oldToken,
                                          HttpServletRequest request){
