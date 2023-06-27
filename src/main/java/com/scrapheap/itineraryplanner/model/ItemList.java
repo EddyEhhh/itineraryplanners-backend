@@ -8,7 +8,7 @@ import java.util.*;
 @Data
 public class ItemList {
     @Id
-    private Long itemList_id;
+    private Long id;
     private int itineraryOrder;
     private String location;
     private String note;
@@ -16,8 +16,7 @@ public class ItemList {
             cascade = CascadeType.ALL
     )
     @JoinColumn(
-            name = "Item",
-            referencedColumnName = "item_id"
+            referencedColumnName = "id"
     )
     private List<Item> items;
 

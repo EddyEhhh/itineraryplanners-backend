@@ -20,7 +20,6 @@ public class Itinerary {
             cascade = CascadeType.ALL
     )
     @JoinColumn(
-            name = "note",
             referencedColumnName = "id"
     )
     private List<Note> notes;
@@ -29,7 +28,6 @@ public class Itinerary {
             cascade = CascadeType.ALL
     )
     @JoinColumn(
-            name = "ItemList",
             referencedColumnName = "id"
     )
     private List<ItemList> itemLists;

@@ -66,7 +66,7 @@ public class Account {
     private VerificationToken verificationToken;
 
     @OneToOne(orphanRemoval = true)
-    @JoinColumn(name = "session", referencedColumnName = "id")
+    @JoinColumn(referencedColumnName = "id")
     private Session session;
 
     private boolean isVerified;

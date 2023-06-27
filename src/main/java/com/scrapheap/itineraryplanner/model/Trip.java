@@ -38,14 +38,13 @@ public class Trip {
             orphanRemoval = true
     )
     @JoinColumn(
-            name = "Itinerary",
             referencedColumnName = "id"
     )
     private List<Itinerary> itineraries;
 
     @ManyToOne
-    @JoinColumn(name="id")
-    private Account acccount;
+    @JoinColumn
+    private Account account;
 
 
 }
