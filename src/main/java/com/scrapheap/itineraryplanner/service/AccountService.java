@@ -1,5 +1,6 @@
 package com.scrapheap.itineraryplanner.service;
 
+import com.scrapheap.itineraryplanner.exception.UnauthorizedException;
 import com.scrapheap.itineraryplanner.repository.AccountRepository;
 import com.scrapheap.itineraryplanner.repository.VerificationTokenRepository;
 import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
@@ -7,8 +8,12 @@ import com.scrapheap.itineraryplanner.event.RegistrationCompleteEvent;
 import com.scrapheap.itineraryplanner.model.Account;
 import com.scrapheap.itineraryplanner.model.VerificationToken;
 import com.scrapheap.itineraryplanner.util.LocalDateTimeUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +26,7 @@ import java.util.Calendar;
 import java.util.List;
 
 @Service
+@Slf4j
 public class AccountService {
 
     @Autowired
@@ -32,6 +38,9 @@ public class AccountService {
 
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     public String folderPath = "C:\\Users\\XXX\\Pictures\\"; // dummy folderpath
 
@@ -53,70 +62,37 @@ public class AccountService {
         return accountDTOList;
     }
 
-    public void createVerificationToken(Account account, String token){
-        LocalDateTime expirationTimestamp = LocalDateTimeUtil.
-                calculateExpirationTimestamp(10);
-        VerificationToken verificationToken = VerificationToken.builder().
-                token(token).
-                expirationTimestamp(expirationTimestamp).
-                account(account).
-                build();
-
-        verificationTokenRepository.save(verificationToken);
 
 
-    }
+    public Account deleteAccount(String username) {
 
-    public boolean validateVerficiationToken(String token){
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
-
-        if(verificationToken == null){
-            throw new IllegalArgumentException("Token not found");
+        if(!authenticationService.checkUsernameSession(username)){
+            throw new UnauthorizedException("No permission");
         }
 
-        Account account = verificationToken.getAccount();
-        Calendar cal = Calendar.getInstance();
-
-        if(verificationToken.getExpirationTimestamp().isBefore(LocalDateTime.now())){
-//            verificationTokenRepository.delete(verificationToken);
-            throw new IllegalArgumentException("Token expired");
-        }
-
-
-        account.setVerified(true);
-        verificationTokenRepository.delete(verificationToken);
-        accountRepository.save(account);
-        return true;
-    }
-
-    public VerificationToken generateNewVerificationToken(String oldToken, String applicationUrl){
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(oldToken);
-        Account account = verificationToken.getAccount();
-
-        applicationEventPublisher.publishEvent(new RegistrationCompleteEvent(account,
-                applicationUrl));
-
-        return verificationToken;
-    }
-
-    public String deleteAccount(String username) {
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
+        if(account == null){
+            throw new UsernameNotFoundException("User does not exist");
+        }
+
         account.setDeleted(true);
         account.setDeletedAt(LocalDateTime.now());
         accountRepository.save(account);
-        if(accountRepository.findByUsername(username).getDeletedAt() != null){
-            return "Account " + username + " was deleted successfully.";
-        }
-        return null;
+        return account;
     }
 
     // Upload, Get, Delete Profile Picture
 
     public String uploadProfileImage(String username, MultipartFile file)throws IOException {
+
+        if(!authenticationService.checkUsernameSession(username)){
+            throw new UnauthorizedException("No permission");
+        }
+
         String filePath = folderPath + file.getOriginalFilename();
-        AccountDetailDTO newAccountDetails = retrieveCurrentProfileData(username);
+        AccountDetailDTO newAccountDetails = getProfile(username);
         newAccountDetails.setImageUrl(filePath);
-        saveNewProfileDetails(username, newAccountDetails);
+        updateProfile(username, newAccountDetails);
         return "File uploaded successfully: " + filePath;
     }
 
@@ -129,18 +105,25 @@ public class AccountService {
     }
 
     public String deleteProfileImage(String username){
-        AccountDetailDTO accountDetailDTO = retrieveCurrentProfileData(username);
+
+        if(!authenticationService.checkUsernameSession(username)){
+            throw new UnauthorizedException("No permission");
+        }
+
+        AccountDetailDTO accountDetailDTO = getProfile(username);
         accountDetailDTO.setImageUrl(null);
-        saveNewProfileDetails(username, accountDetailDTO);
+        updateProfile(username, accountDetailDTO);
+
         if(accountRepository.findByUsernameAndIsDeletedFalse(username).getImageUrl() == null) {
             return "Profile picture of " + username + " deleted successfully.";
         }
+
         return null;
     }
 
     // To retrieve current user profile data from db
 
-    public AccountDetailDTO retrieveCurrentProfileData(String username){
+    public AccountDetailDTO getProfile(String username){
         Account currentProfile = accountRepository.findByUsernameAndIsDeletedFalse(username);
         AccountDetailDTO accountDetailDTO = AccountDetailDTO.builder().
                 displayName(currentProfile.getDisplayName()).
@@ -148,7 +131,7 @@ public class AccountService {
                 username(username).
                 imageUrl(currentProfile.getImageUrl()).
                 created(currentProfile.getCreated()).
-                loginAttempt(currentProfile.getLoginAttempt()).
+//                loginAttempt(currentProfile.getLoginAttempt()).
                 setting(currentProfile.getSetting()).
                 build();
         return accountDetailDTO;
@@ -156,7 +139,7 @@ public class AccountService {
 
     // Saves edited profile details
 
-    public void saveNewProfileDetails(String username, AccountDetailDTO accountDetailDTO) {
+    public void updateProfile(String username, AccountDetailDTO accountDetailDTO) {
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
         account.setDisplayName(accountDetailDTO.getDisplayName());
         account.setEmail(accountDetailDTO.getEmail());

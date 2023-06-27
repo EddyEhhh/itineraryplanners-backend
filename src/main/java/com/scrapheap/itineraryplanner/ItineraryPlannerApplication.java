@@ -7,10 +7,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 //@EnableConfigurationProperties(RsaKeyProperties.class)
 @SpringBootApplication
 @EnableAsync
-public class AccountApplication {
+public class ItineraryPlannerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AccountApplication.class, args);
+        SpringApplication.run(ItineraryPlannerApplication.class, args);
     }
 
 }

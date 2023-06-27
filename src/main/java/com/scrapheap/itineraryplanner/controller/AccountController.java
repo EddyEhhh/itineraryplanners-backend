@@ -1,6 +1,7 @@
 package com.scrapheap.itineraryplanner.controller;
 
 import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
+import com.scrapheap.itineraryplanner.model.Account;
 import com.scrapheap.itineraryplanner.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,11 +52,9 @@ public class AccountController {
                 .body(response);
     }
 
-    @DeleteMapping("/delete/{username}")
-    public ResponseEntity<?> deleteAccount(@PathVariable String username){
-        String response = accountService.deleteAccount(username);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(response);
-
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/{username}")
+    public void deleteAccount(@PathVariable String username){
+        Account response = accountService.deleteAccount(username);
     }
 }

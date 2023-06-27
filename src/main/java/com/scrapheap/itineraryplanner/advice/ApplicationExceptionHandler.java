@@ -1,5 +1,6 @@
 package com.scrapheap.itineraryplanner.advice;
 
+import com.scrapheap.itineraryplanner.exception.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +23,14 @@ public class ApplicationExceptionHandler {
         return errorMap;
     }
 
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnauthorizedException.class)
+    public Map<String, String> handleUnauthorizedException(Exception ex) {
+        Map<String, String> errorMap = new HashMap<String, String>();
+        errorMap.put("errorMessage", ex.getMessage());
+        return errorMap;
+    }
+
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 //    @ExceptionHandler(Exception.class)
 //    public Map<String, String> handleBusinessException(Exception ex) {
@@ -29,5 +38,7 @@ public class ApplicationExceptionHandler {
 //        errorMap.put("errorMessage", ex.getMessage());
 //        return errorMap;
 //    }
+
+
 
 }

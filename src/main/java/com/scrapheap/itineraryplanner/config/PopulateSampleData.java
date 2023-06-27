@@ -5,9 +5,11 @@ import com.scrapheap.itineraryplanner.model.LoginAttempt;
 import com.scrapheap.itineraryplanner.model.Setting;
 import com.scrapheap.itineraryplanner.repository.AccountRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +18,9 @@ import java.util.List;
 @Configuration
 @AllArgsConstructor
 public class PopulateSampleData {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Bean
     CommandLineRunner commandLineRunner(AccountRepository accountRepository) {
@@ -77,6 +82,8 @@ public class PopulateSampleData {
                 theme("light").
                 build();
 
+        String defaultRole = "USER";
+
 //            ForgotPassword forgotPassword1 = ForgotPassword.builder().
 ////                    token().
 ////                    timestamp().
@@ -91,10 +98,11 @@ public class PopulateSampleData {
                 displayName(displayName).
                 email(email).
                 username(username).
-                password(password).
+                password(passwordEncoder.encode(password)).
                 created(currentTime).
                 loginAttempt(loginAttempt).
                 setting(setting).
+                role(defaultRole).
 //                    forgotPassword(forgotPassword1).
 //                    session(session1).
                 build();

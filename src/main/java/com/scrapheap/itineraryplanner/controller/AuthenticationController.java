@@ -45,7 +45,7 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/verify")
     public void verifyRegistration(@RequestParam("token") String token){
-        accountService.validateVerficiationToken(token);
+        authenticationService.validateVerficiationToken(token);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -53,7 +53,7 @@ public class AuthenticationController {
     public void resendVerifyRegistration(@RequestParam("token") String oldToken,
                                          HttpServletRequest request){
         String applicationUrl = getApplicationUrl(request);
-        accountService.generateNewVerificationToken(oldToken, applicationUrl);
+        authenticationService.generateNewVerificationToken(oldToken, applicationUrl);
     }
 
     private String getApplicationUrl(HttpServletRequest request){

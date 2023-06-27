@@ -1,6 +1,7 @@
 package com.scrapheap.itineraryplanner.listener;
 
 import com.scrapheap.itineraryplanner.repository.VerificationTokenRepository;
+import com.scrapheap.itineraryplanner.service.AuthenticationService;
 import com.scrapheap.itineraryplanner.service.MailService;
 import com.scrapheap.itineraryplanner.util.StringUtil;
 import com.scrapheap.itineraryplanner.event.RegistrationCompleteEvent;
@@ -22,7 +23,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
 
 
     @Autowired
-    private AccountService accountService;
+    private AuthenticationService authenticationService;
 
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;
@@ -40,7 +41,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
             verificationTokenRepository.delete(account.getVerificationToken());
         }
         String token = UUID.randomUUID().toString();
-        accountService.createVerificationToken(account, token);
+        authenticationService.createVerificationToken(account, token);
         String url = String.format("%s/api/v1/auth/verify?token=%s",
                 event.getApplicationUrl(), token);
 
