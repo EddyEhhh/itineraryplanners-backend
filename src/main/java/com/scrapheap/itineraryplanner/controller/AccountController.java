@@ -69,14 +69,14 @@ public class AccountController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping
+    @PostMapping("/forgotPassword")
     public ResponseEntity<?> forgotPassword(@PathVariable ForgotPasswordDTO forgotPasswordDTO) {
         boolean response = accountService.forgotPassword(forgotPasswordDTO);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping
+    @PostMapping("/forgotPassword/token")
     public ResponseEntity<?> changePassword(@PathVariable ChangePasswordDTO changePasswordDTO, String username) {
         boolean response = accountService.changePassword(changePasswordDTO, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);

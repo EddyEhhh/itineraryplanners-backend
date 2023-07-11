@@ -1,6 +1,7 @@
 package com.scrapheap.itineraryplanner.service;
 
 
+import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
 import com.scrapheap.itineraryplanner.exception.AlreadyExistsException;
 import com.scrapheap.itineraryplanner.exception.UnauthorizedException;
 import com.scrapheap.itineraryplanner.model.LoginAttempt;
@@ -15,6 +16,7 @@ import com.scrapheap.itineraryplanner.model.Account;
 import com.scrapheap.itineraryplanner.repository.VerificationTokenRepository;
 import com.scrapheap.itineraryplanner.util.LocalDateTimeUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +34,7 @@ import java.util.Calendar;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
 
     @Autowired
@@ -56,7 +59,7 @@ public class AuthenticationService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public AuthenticationResponseDTO register(AccountCreateDTO accountDTO, String applicationUrl){
+    public String register(AccountCreateDTO accountDTO, String applicationUrl){
 
         if (accountRepository.findByUsernameAndIsDeletedFalse(accountDTO.getUsername()) != null){
             throw new AlreadyExistsException("Username already exists");
@@ -97,12 +100,10 @@ public class AuthenticationService {
 
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(accountDTO.getUsername());
         var jwtToken = jwtService.generateToken(userDetails);
-        return AuthenticationResponseDTO.builder()
-                .token(jwtToken)
-                .build();
+        return jwtToken;
     }
 
-    public AuthenticationResponseDTO authenticate(AccountCredentialDTO accountDTO){
+    public String authenticate(AccountCredentialDTO accountDTO){
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         accountDTO.getUsername(),
@@ -115,9 +116,7 @@ public class AuthenticationService {
         }
 
         var jwtToken = jwtService.generateToken(userDetails);
-        return AuthenticationResponseDTO.builder()
-                .token(jwtToken)
-                .build();
+        return jwtToken;
     }
 
 
@@ -166,6 +165,20 @@ public class AuthenticationService {
         return verificationToken;
     }
 
+    public AccountDetailDTO getAccountDetail(String username){
+        Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
+        AccountDetailDTO accountDetailDTO = AccountDetailDTO.builder()
+                .displayName(account.getDisplayName())
+                .email(account.getEmail())
+                .username(account.getUsername())
+                .imageUrl(account.getImageUrl())
+                .created(account.getCreated())
+//                .loginAttempt(account.getLoginAttempt())
+//                .setting(account.getSetting())
+                .build();
+        return accountDetailDTO;
+    }
+
     public boolean checkUsernameSession(String username){
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         if(currentUser.equals(username)){
@@ -174,4 +187,9 @@ public class AuthenticationService {
         return false;
     }
 
+//    public AccountDetailDTO getCurrentAccountDetail() {
+//
+//        log.info(username + " is the current user");
+//        return getAccountDetail("jaq_jw");
+//    }
 }

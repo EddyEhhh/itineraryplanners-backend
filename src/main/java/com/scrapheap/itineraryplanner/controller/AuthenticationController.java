@@ -3,18 +3,26 @@ package com.scrapheap.itineraryplanner.controller;
 
 import com.scrapheap.itineraryplanner.dto.AccountCreateDTO;
 import com.scrapheap.itineraryplanner.dto.AccountCredentialDTO;
+import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
 import com.scrapheap.itineraryplanner.dto.AuthenticationResponseDTO;
 import com.scrapheap.itineraryplanner.service.AccountService;
 import com.scrapheap.itineraryplanner.service.AuthenticationService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -29,15 +37,47 @@ public class AuthenticationController {
 //    }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody @Valid AccountCreateDTO accountDTO, final HttpServletRequest request) {
+    public ResponseEntity<?> register(@RequestBody @Valid AccountCreateDTO accountDTO, final HttpServletRequest request) {
         String applicationUrl = getApplicationUrl(request);
-        return ResponseEntity.ok(authenticationService.register(accountDTO, applicationUrl));
+        String authenticationResponse = authenticationService.register(accountDTO, applicationUrl);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, authenticationResponse)
+                .body("Success");
     }
 
     @PostMapping
-    public ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody @Valid AccountCredentialDTO accountDTO, final HttpServletRequest request) {
+    public ResponseEntity<?> authenticate(@RequestBody @Valid AccountCredentialDTO accountDTO, final HttpServletRequest request, HttpServletResponse response) {
         String applicationUrl = getApplicationUrl(request);
-        return ResponseEntity.ok(authenticationService.authenticate(accountDTO));
+//        AuthenticationResponseDTO authenticationResponse = authenticationService.authenticate(accountDTO);
+//        response.setHeader("Authorization", authenticationResponse.getToken());
+
+        String authenticationResponse = authenticationService.authenticate(accountDTO);
+//        Cookie cookieJwt = new Cookie("token", authenticationResponse.getToken());
+//        cookieJwt.setMaxAge(300);
+//        cookieJwt.setHttpOnly(true);
+//        cookieJwt.setSecure(true);
+//        response.addCookie(cookieJwt);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, authenticationResponse)
+                .body("Success");
+    }
+
+//    public ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody @Valid AccountCredentialDTO accountDTO, final HttpServletRequest request, HttpServletResponse response) {
+//        String applicationUrl = getApplicationUrl(request);
+//        AuthenticationResponseDTO authenticationResponse = authenticationService.authenticate(accountDTO);
+//        Cookie cookie = new Cookie("token", authenticationResponse.getToken());
+//        cookie.setMaxAge(300);
+//        cookie.setHttpOnly(true);
+//        cookie.setSecure(true);
+//        response.addCookie(cookie);
+//        return ResponseEntity.ok(authenticationService.authenticate(accountDTO));
+//    }
+
+    @GetMapping
+    public ResponseEntity<AccountDetailDTO> getSessionAccount(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        AccountDetailDTO accountDetailDTO = authenticationService.getAccountDetail(username);
+        return ResponseEntity.ok(accountDetailDTO);
     }
 
 
