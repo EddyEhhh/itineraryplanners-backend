@@ -1,6 +1,9 @@
 package com.scrapheap.itineraryplanner.controller;
 
 import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
+import com.scrapheap.itineraryplanner.dto.ChangePasswordDTO;
+import com.scrapheap.itineraryplanner.dto.ForgotPasswordDTO;
+import com.scrapheap.itineraryplanner.dto.ForgotPasswordEmailDTO;
 import com.scrapheap.itineraryplanner.model.Account;
 import com.scrapheap.itineraryplanner.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
@@ -57,4 +60,26 @@ public class AccountController {
     public void deleteAccount(@PathVariable String username){
         Account response = accountService.deleteAccount(username);
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping
+    public ResponseEntity<?> forgotPasswordEmail(@PathVariable ForgotPasswordEmailDTO forgotPasswordEmailDTO) {
+        boolean response = accountService.forgotPasswordEmail(forgotPasswordEmailDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping
+    public ResponseEntity<?> forgotPassword(@PathVariable ForgotPasswordDTO forgotPasswordDTO) {
+        boolean response = accountService.forgotPassword(forgotPasswordDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping
+    public ResponseEntity<?> changePassword(@PathVariable ChangePasswordDTO changePasswordDTO, String username) {
+        boolean response = accountService.changePassword(changePasswordDTO, username);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }

@@ -1,7 +1,13 @@
 package com.scrapheap.itineraryplanner.service;
 
+import com.scrapheap.itineraryplanner.dto.ChangePasswordDTO;
+import com.scrapheap.itineraryplanner.dto.ForgotPasswordDTO;
+import com.scrapheap.itineraryplanner.dto.ForgotPasswordEmailDTO;
+import com.scrapheap.itineraryplanner.exception.InvalidPasswordException;
 import com.scrapheap.itineraryplanner.exception.UnauthorizedException;
+import com.scrapheap.itineraryplanner.model.ForgotPassword;
 import com.scrapheap.itineraryplanner.repository.AccountRepository;
+import com.scrapheap.itineraryplanner.repository.ForgotPasswordRepository;
 import com.scrapheap.itineraryplanner.repository.VerificationTokenRepository;
 import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
 import com.scrapheap.itineraryplanner.event.RegistrationCompleteEvent;
@@ -24,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -34,6 +41,9 @@ public class AccountService {
 
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;
+
+    @Autowired
+    private ForgotPasswordRepository forgotPasswordRepository;
 
 
     @Autowired
@@ -148,7 +158,58 @@ public class AccountService {
         accountRepository.save(account);
     }
 
+    // forgot password
 
+    public boolean validPassword(String password) {
+        if (password.length() < 8) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean forgotPasswordEmail(ForgotPasswordEmailDTO forgotPasswordEmailDTO) {
+        String forgotPasswordToken = UUID.randomUUID().toString();
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10);
+        ForgotPassword forgotPassword = ForgotPassword.builder().
+                token(forgotPasswordToken).
+                expirationTime(expirationTime).
+                build();
+        Account account = accountRepository.findByEmailAndIsDeletedFalse(forgotPasswordEmailDTO.getEmail());
+        account.setForgotPassword(forgotPassword);
+        accountRepository.save(account);
+        return true;
+    }
+
+    public boolean forgotPassword(ForgotPasswordDTO forgotPasswordDTO) {
+        ForgotPassword forgotPassword = forgotPasswordRepository.findForgotPasswordByToken(forgotPasswordDTO.getToken());
+        Account account = accountRepository.findByForgotPassword(forgotPassword);
+        if (validPassword(forgotPasswordDTO.getNewPassword())) {
+            account.setPassword(forgotPasswordDTO.getNewPassword());
+            accountRepository.save(account);
+            return true;
+        } else {
+            throw new InvalidPasswordException("Please enter a password that has at least 8 characters");
+        }
+    }
+
+    // change password
+
+    public boolean changePassword(ChangePasswordDTO changePasswordDTO, String username) {
+        Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
+        String password = account.getPassword();
+        if (changePasswordDTO.getOldPassword().equals(password)) {
+            if(validPassword(changePasswordDTO.getNewPassword())) {
+                account.setPassword(changePasswordDTO.getNewPassword());
+                System.out.println("password successfully changed");
+                return true;
+            } else {
+                throw new InvalidPasswordException("Please enter a password that has at least 8 characters");
+            }
+        } else {
+            System.out.println("Invalid password entered");
+            return false;
+        }
+    }
 
 
 
