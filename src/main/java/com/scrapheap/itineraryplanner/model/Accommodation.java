@@ -27,28 +27,6 @@ public class Accommodation {
     @NotEmpty
     private Date checkOut;
 
-    public String getAddress() {
-        return address;
-    }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Date getCheckIn() {
-        return checkIn;
-    }
-
-    public void setCheckIn(Date checkIn) {
-        this.checkIn = checkIn;
-    }
-
-    public Date getCheckOut() {
-        return checkOut;
-    }
-
-    public void setCheckOut(Date checkOut) {
-        this.checkOut = checkOut;
-    }
 
 }

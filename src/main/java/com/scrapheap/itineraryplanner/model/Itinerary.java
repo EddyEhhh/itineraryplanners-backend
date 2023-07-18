@@ -22,14 +22,24 @@ public class Itinerary {
     @JoinColumn(
             referencedColumnName = "id"
     )
-    private List<Note> notes;
+    private List<Place> places;
 
-    @OneToMany(
-            cascade = CascadeType.ALL
-    )
-    @JoinColumn(
-            referencedColumnName = "id"
-    )
-    private List<ItemList> itemLists;
+
+
+//    @OneToMany(
+//            cascade = CascadeType.ALL
+//    )
+//    @JoinColumn(
+//            referencedColumnName = "id"
+//    )
+//    private List<Note> notes;
+
+//    @OneToMany(
+//            cascade = CascadeType.ALL
+//    )
+//    @JoinColumn(
+//            referencedColumnName = "id"
+//    )
+//    private List<ItemList> itemLists;
 
 }

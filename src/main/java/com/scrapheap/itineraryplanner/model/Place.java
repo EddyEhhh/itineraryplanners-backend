@@ -37,16 +37,30 @@ public class Place{
 
     private String pictureLink;
 
-    @OneToMany(cascade=CascadeType.ALL,
-            fetch=FetchType.LAZY,
-            orphanRemoval = true)
-    @JoinColumn(referencedColumnName = "id")
-    private List<Flight> flights;
+    @OneToOne(cascade=CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(
+            referencedColumnName = "id")
+    private Flight flight;
 
-    @OneToMany(cascade=CascadeType.ALL,
-            fetch=FetchType.LAZY,
-            orphanRemoval = true)
-    @JoinColumn(referencedColumnName = "id")
-    private List<Accommodation> accommodations;
+    @OneToOne(cascade=CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(
+            referencedColumnName = "id")
+    private Accommodation accommodation;
+
+//    @OneToMany(cascade=CascadeType.ALL,
+//            fetch=FetchType.LAZY,
+//            orphanRemoval = true)
+//    @JoinColumn(referencedColumnName = "id")
+//    private List<Flight> flights;
+//
+//    @OneToMany(cascade=CascadeType.ALL,
+//            fetch=FetchType.LAZY,
+//            orphanRemoval = true)
+//    @JoinColumn(referencedColumnName = "id")
+//    private List<Accommodation> accommodations;
 
 }

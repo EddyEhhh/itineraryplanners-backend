@@ -28,6 +28,8 @@ public class Trip {
 
     private Date endDate;
 
+    private String currency;
+
     private double totalBudget;
 
     private String pictureLink;
