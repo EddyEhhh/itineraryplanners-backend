@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -21,14 +22,11 @@ public class Flight {
     @NotEmpty
     private String airline;
 
-    @NotEmpty
     private int flightNumber;
 
-    @NotEmpty
-    private Date departureDate;
+    private LocalDateTime departureDate;
 
-    @NotEmpty
-    private Date arrivalDate;
+    private LocalDateTime arrivalDate;
 
 
 

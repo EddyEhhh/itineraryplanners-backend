@@ -23,7 +23,6 @@ public class ForgotPassword {
     @NotEmpty
     private String token;
 
-    @NotEmpty
     private LocalDateTime expirationTime;
 
     @OneToOne(mappedBy = "forgotPassword")

@@ -1,10 +1,12 @@
 package com.scrapheap.itineraryplanner.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -15,13 +17,12 @@ public class FlightDetailDTO {
     @NotEmpty
     private String airline;
 
-    @NotEmpty
     private int flightNumber;
 
     @NotEmpty
-    private Date departureDate;
+    private String departureDate;
 
     @NotEmpty
-    private Date arrivalDate;
+    private String arrivalDate;
 
 }

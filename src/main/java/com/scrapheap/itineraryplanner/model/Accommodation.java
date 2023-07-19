@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -21,11 +22,9 @@ public class Accommodation {
     @NotEmpty
     private String address;
 
-    @NotEmpty
-    private Date checkIn;
+    private LocalDateTime checkIn;
 
-    @NotEmpty
-    private Date checkOut;
+    private LocalDateTime checkOut;
 
 
 

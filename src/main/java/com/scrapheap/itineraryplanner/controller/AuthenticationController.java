@@ -77,6 +77,7 @@ public class AuthenticationController {
     public ResponseEntity<AccountDetailDTO> getSessionAccount(){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         AccountDetailDTO accountDetailDTO = authenticationService.getAccountDetail(username);
+//        AccountDetailDTO accountDetailDTO = authenticationService.getCurrentSession();
         return ResponseEntity.ok(accountDetailDTO);
     }
 

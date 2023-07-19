@@ -1,14 +1,13 @@
 package com.scrapheap.itineraryplanner.dto;
 
-import com.scrapheap.itineraryplanner.model.Accommodation;
-import com.scrapheap.itineraryplanner.model.Flight;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -22,11 +21,13 @@ public class PlaceDetailDTO {
 //    @NotEmpty
 //    private int itineraryOrder;
 
+
+    @NotEmpty(message = "Cannot be empty test!!!")
     private String location;
 
-    private LocalDateTime timeStart;
+    private String timeStart;
 
-    private LocalDateTime timeEnd;
+    private String timeEnd;
 
     private String note;
 
@@ -37,13 +38,13 @@ public class PlaceDetailDTO {
     )
     @JoinColumn(
             referencedColumnName = "id")
-    private FlightDetailDTO flightDetailDTO;
+    private FlightDetailDTO flight;
 
     @OneToOne(cascade=CascadeType.ALL,
             fetch = FetchType.LAZY
     )
     @JoinColumn(
             referencedColumnName = "id")
-    private AccommodationDetailDTO accommodationDetailDTO;
+    private AccommodationDetailDTO accommodation;
 
 }

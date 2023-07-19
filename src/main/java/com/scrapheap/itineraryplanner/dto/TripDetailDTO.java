@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -21,9 +22,9 @@ public class TripDetailDTO {
 
     private String location;
 
-    private Date startDate;
+    private String startDate;
 
-    private Date endDate;
+    private String endDate;
 
     private String currency;
 
@@ -39,6 +40,6 @@ public class TripDetailDTO {
     @JoinColumn(
             referencedColumnName = "id"
     )
-    private List<ItineraryDetailDTO> itineraryDetailsDTO;
+    private List<ItineraryDetailDTO> itinerary;
 
 }

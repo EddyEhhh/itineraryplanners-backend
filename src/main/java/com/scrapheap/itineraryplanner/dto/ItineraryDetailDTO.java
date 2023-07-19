@@ -13,12 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 public class ItineraryDetailDTO {
 
-    private Long id;
+//    private Long id;
 
-    private int order;
+//    private int order;
 
     private String subheader;
 
-    private List<PlaceDetailDTO> placeDetailsDTO;
+    private List<PlaceDetailDTO> place;
 
 }

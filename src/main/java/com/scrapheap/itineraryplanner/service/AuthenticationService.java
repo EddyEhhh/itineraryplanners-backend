@@ -187,6 +187,16 @@ public class AuthenticationService {
         return false;
     }
 
+    public AccountDetailDTO getCurrentSession(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
+        AccountDetailDTO accountDetailDTO = AccountDetailDTO.builder()
+                .username(account.getUsername())
+                .displayName(account.getDisplayName())
+                .build();
+        return accountDetailDTO;
+    }
+
 //    public AccountDetailDTO getCurrentAccountDetail() {
 //
 //        log.info(username + " is the current user");

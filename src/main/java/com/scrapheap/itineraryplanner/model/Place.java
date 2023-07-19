@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -19,17 +20,16 @@ public class Place{
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
-    @NotEmpty
     private int itineraryOrder;
 
     @NotEmpty
     private String location;
 
 
-    private LocalDateTime timeStart;
+    private LocalTime timeStart;
 
 
-    private LocalDateTime timeEnd;
+    private LocalTime timeEnd;
 
 
     private String note;

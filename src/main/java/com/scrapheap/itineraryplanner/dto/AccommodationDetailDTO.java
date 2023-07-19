@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -16,9 +17,9 @@ public class AccommodationDetailDTO {
     private String address;
 
     @NotEmpty
-    private Date checkIn;
+    private String checkIn;
 
     @NotEmpty
-    private Date checkOut;
+    private String checkOut;
 
 }
