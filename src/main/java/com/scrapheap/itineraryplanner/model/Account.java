@@ -42,21 +42,18 @@ public class Account {
     private String role;
 
     @OneToOne(cascade=CascadeType.ALL,
-            fetch = FetchType.LAZY,
             orphanRemoval = true)
     @JoinColumn(
             referencedColumnName = "id")
     private LoginAttempt loginAttempt;
 
     @OneToOne(cascade=CascadeType.ALL,
-            fetch = FetchType.LAZY,
             orphanRemoval = true)
     @JoinColumn(
             referencedColumnName = "id")
     private Setting setting;
 
     @OneToOne(cascade=CascadeType.ALL,
-            fetch = FetchType.LAZY,
             orphanRemoval = true)
     @JoinColumn(
             referencedColumnName = "id")
@@ -75,7 +72,12 @@ public class Account {
 
     private LocalDateTime deletedAt;
 
-    @OneToMany(mappedBy="account")
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch=FetchType.EAGER,
+            orphanRemoval = true,
+            mappedBy = "account"
+    )
     private List<Trip> trips;
 
 

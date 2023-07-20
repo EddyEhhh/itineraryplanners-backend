@@ -1,5 +1,6 @@
 package com.scrapheap.itineraryplanner.service;
 
+import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
 import com.scrapheap.itineraryplanner.dto.ItineraryDetailDTO;
 import com.scrapheap.itineraryplanner.dto.PlaceDetailDTO;
 import com.scrapheap.itineraryplanner.dto.TripDetailDTO;
@@ -72,6 +73,31 @@ public class TripService {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
+        trip.setAccount(account);
+
+        tripRepository.save(trip);
+        return tripDetailDTO;
+    }
+
+    public TripDetailDTO createTrip(TripDetailDTO tripDetailDTO, AccountDetailDTO accountDetailDTO){
+//        ArrayList<Itinerary> itinerarys = new ArrayList<>();
+
+        Trip trip = Trip.builder()
+                .title(tripDetailDTO.getTitle())
+                .location(tripDetailDTO.getLocation())
+                .startDate(LocalDateUtil.parseDate(tripDetailDTO.getStartDate()))
+                .endDate(LocalDateUtil.parseDate(tripDetailDTO.getEndDate()))
+                .currency(tripDetailDTO.getCurrency())
+                .totalBudget(tripDetailDTO.getTotalBudget())
+                .pictureLink(tripDetailDTO.getPictureLink())
+                .build();
+
+        if(tripDetailDTO.getItinerary().size() > 0){
+            List<Itinerary> itineraryList = itineraryService.convertToEntityList(tripDetailDTO.getItinerary());
+            trip.setItineraries(itineraryList);
+        }
+
+        Account account = accountRepository.findByUsernameAndIsDeletedFalse(accountDetailDTO.getUsername());
         trip.setAccount(account);
 
         tripRepository.save(trip);

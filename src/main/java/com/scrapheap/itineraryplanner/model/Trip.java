@@ -36,7 +36,7 @@ public class Trip {
 
     @OneToMany(
             cascade = CascadeType.ALL,
-            fetch=FetchType.LAZY,
+            fetch=FetchType.EAGER,
             orphanRemoval = true
     )
     @JoinColumn(
@@ -44,8 +44,8 @@ public class Trip {
     )
     private List<Itinerary> itineraries;
 
-    @ManyToOne
-    @JoinColumn
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_id")
     private Account account;
 
 
