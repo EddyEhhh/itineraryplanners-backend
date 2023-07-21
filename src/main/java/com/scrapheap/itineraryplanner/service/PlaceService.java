@@ -1,5 +1,7 @@
 package com.scrapheap.itineraryplanner.service;
 
+import com.scrapheap.itineraryplanner.dto.AccommodationDetailDTO;
+import com.scrapheap.itineraryplanner.dto.FlightDetailDTO;
 import com.scrapheap.itineraryplanner.dto.PlaceDetailDTO;
 import com.scrapheap.itineraryplanner.model.Accommodation;
 import com.scrapheap.itineraryplanner.model.Flight;
@@ -31,7 +33,7 @@ public class PlaceService {
                     .timeStart(LocalTimeUtil.parseTime(eachPlaceDetail.getTimeStart()))
                     .timeEnd(LocalTimeUtil.parseTime(eachPlaceDetail.getTimeEnd()))
                     .note(eachPlaceDetail.getNote())
-                    .pictureLink(eachPlaceDetail.getPictureLink())
+//                    .pictureLink(eachPlaceDetail.getPictureLink())
                     .build();
 
             if(eachPlaceDetail.getFlight() != null){
@@ -59,4 +61,44 @@ public class PlaceService {
         return placeList;
     }
 
+    public List<PlaceDetailDTO> convertToDTOList(List<Place> places) {
+
+        if(places.size() == 0 || places == null){
+            return null;
+        }
+
+        ArrayList<PlaceDetailDTO> placeDTOList = new ArrayList<PlaceDetailDTO>();
+
+        for(Place eachPlace : places){
+            PlaceDetailDTO placeDetailDTO = PlaceDetailDTO.builder()
+                    .location(eachPlace.getLocation())
+                    .timeStart(eachPlace.getTimeStart().toString())
+                    .timeEnd(eachPlace.getTimeEnd().toString())
+                    .note(eachPlace.getNote())
+                    .pictureLink(eachPlace.getPictureLink())
+                    .build();
+
+            if(eachPlace.getFlight() != null){
+                FlightDetailDTO flightDetailDTO = FlightDetailDTO.builder()
+                        .airline(eachPlace.getFlight().getAirline())
+                        .flightNumber(eachPlace.getFlight().getFlightNumber())
+                        .departureDate(eachPlace.getFlight().getDepartureDate().toString())
+                        .arrivalDate(eachPlace.getFlight().getArrivalDate().toString())
+                        .build();
+                placeDetailDTO.setFlight(flightDetailDTO);
+
+            }else if(eachPlace.getAccommodation() != null){
+                AccommodationDetailDTO accommodationDetailDTO = AccommodationDetailDTO.builder()
+                        .address(eachPlace.getAccommodation().getAddress())
+                        .checkIn(eachPlace.getAccommodation().getCheckIn().toString())
+                        .checkOut(eachPlace.getAccommodation().getCheckOut().toString())
+                        .build();
+                placeDetailDTO.setAccommodation(accommodationDetailDTO);
+            }
+
+            placeDTOList.add(placeDetailDTO);
+        }
+        return placeDTOList;
+
+    }
 }

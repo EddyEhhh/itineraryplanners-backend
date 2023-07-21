@@ -38,4 +38,22 @@ public class ItineraryService {
 
     }
 
+    public List<ItineraryDetailDTO> convertToDTOList(List<Itinerary> itinerarys) {
+
+        if(itinerarys.size() == 0 || itinerarys == null){
+            return null;
+        }
+
+        ArrayList<ItineraryDetailDTO> itineraryListDTO = new ArrayList<ItineraryDetailDTO>();
+
+        for(Itinerary itinerary : itinerarys) {
+            ItineraryDetailDTO itineraryDetailDTO = ItineraryDetailDTO.builder()
+                    .subheader(itinerary.getSubheader())
+                    .place(placeService.convertToDTOList(itinerary.getPlaces()))
+                    .build();
+            itineraryListDTO.add(itineraryDetailDTO);
+
+        }
+        return itineraryListDTO;
+    }
 }
