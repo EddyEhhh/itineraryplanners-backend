@@ -53,15 +53,21 @@ public class TripService {
 //        return tripDetailDTO;
 //    }
 
-    public List<TripDetailDTO> getUserTripBasic(){
+    public List<TripDetailDTO> getUserTrip(){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 //        Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
-        return getUserTripBasic(username);
+        return getUserTrip(username);
     }
 
-    public List<TripDetailDTO> getUserTripBasic(String username){
+    public List<TripDetailDTO> getUserTrip(String username){
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
         return convertToDTOList(tripRepository.findByAccount(account));
+    }
+
+    public TripDetailDTO getTripById(Long id){
+//        Account account = accountRepository.find(username);
+        Trip trip = tripRepository.findById(id).get();
+        return convertToDTO(trip);
     }
 
 

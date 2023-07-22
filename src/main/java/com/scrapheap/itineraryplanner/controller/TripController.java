@@ -35,9 +35,14 @@ public class TripController {
 //    public ResponseEntity<List<TripDetailDTO>> getTrip(@PathVariable("username") String username){
 //        return ResponseEntity.ok(tripService.getUserTripBasic(username));
 //    }
-    @GetMapping("/personal/all")
-    public ResponseEntity<List<TripDetailDTO>> getTrip(){
-        return ResponseEntity.ok(tripService.getUserTripBasic());
+    @GetMapping("/personal")
+    public ResponseEntity<List<TripDetailDTO>> getUserTrip(){
+        return ResponseEntity.ok(tripService.getUserTrip());
+    }
+
+    @GetMapping("/personal/{id}")
+    public ResponseEntity<TripDetailDTO> getTrip(@PathVariable("id") Long id){
+        return ResponseEntity.ok(tripService.getTripById(id));
     }
 
 //    @GetMapping("/personal/{trip_id}")

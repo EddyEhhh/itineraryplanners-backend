@@ -101,12 +101,19 @@ public class PopulateSampleData {
 
         List<Trip> tripsToCreate = new ArrayList<Trip>();
         //jaq_jw
+        Account account = accountRepository.findByUsernameAndIsDeletedFalse("jaq_jw");
         Trip trip1 = generatePredefinedTrip1();
-//        trip1.setAccount(accountRepository.findByUsernameAndIsDeletedFalse("jaq_jw"));
-        tripsToCreate.add(trip1);
+        trip1.setAccount(account);
 
+        Trip trip2 =  generatePredefinedTrip2();
+        trip2.setAccount(account);
 
-        tripRepository.save(trip1);
+        Trip trip3 =  generatePredefinedTrip3();
+        trip3.setAccount(account);
+
+        tripsToCreate.addAll(List.of(trip1, trip2, trip3));
+
+        tripRepository.saveAll(tripsToCreate);
     }
 
 
@@ -329,7 +336,338 @@ public class PopulateSampleData {
                 return trip;
             }
 
+    public Trip generatePredefinedTrip2(){
 
+        Trip trip = new Trip();
+        trip.setTitle("Exploring Japan");
+        trip.setLocation("Japan, Tokyo");
+        trip.setStartDate(LocalDateUtil.parseDate("2023-10-20"));
+        trip.setEndDate(LocalDateUtil.parseDate("2023-10-23"));
+        trip.setCurrency("JPY");
+        trip.setTotalBudget(8000.00);
+        trip.setPictureLink("/exploring_japan/image1");
+
+        List<Itinerary> itineraries = new ArrayList<>();
+
+        // First Itinerary
+        Itinerary firstDayItinerary = new Itinerary();
+        firstDayItinerary.setSubheader("Day 1");
+
+        List<Place> firstDayPlaces = new ArrayList<>();
+
+        Place firstDayFirstPlace = new Place();
+        firstDayFirstPlace.setLocation("Narita International Airport, Tokyo, Japan");
+        firstDayFirstPlace.setTimeStart(LocalTime.parse("08:00:00"));
+        firstDayFirstPlace.setTimeEnd(LocalTime.parse("09:00:00"));
+        firstDayFirstPlace.setNote("Arrival and immigration");
+        firstDayFirstPlace.setPictureLink("/exploring_japan/airport");
+
+        Place firstDaySecondPlace = new Place();
+        firstDaySecondPlace.setLocation("Asakusa, Tokyo, Japan");
+        firstDaySecondPlace.setTimeStart(LocalTime.parse("10:00:00"));
+        firstDaySecondPlace.setTimeEnd(LocalTime.parse("14:00:00"));
+        firstDaySecondPlace.setNote("Visit Senso-ji Temple and Nakamise Shopping Street");
+        firstDaySecondPlace.setPictureLink("/exploring_japan/asakusa");
+
+        Place firstDayThirdPlace = new Place();
+        firstDayThirdPlace.setLocation("Akihabara, Tokyo, Japan");
+        firstDayThirdPlace.setTimeStart(LocalTime.parse("15:00:00"));
+        firstDayThirdPlace.setTimeEnd(LocalTime.parse("19:00:00"));
+        firstDayThirdPlace.setNote("Explore electronics and anime shops");
+        firstDayThirdPlace.setPictureLink("/exploring_japan/akihabara");
+
+        firstDayPlaces.add(firstDayFirstPlace);
+        firstDayPlaces.add(firstDaySecondPlace);
+        firstDayPlaces.add(firstDayThirdPlace);
+
+        firstDayItinerary.setPlaces(firstDayPlaces);
+        itineraries.add(firstDayItinerary);
+
+        // Second Itinerary
+        Itinerary secondDayItinerary = new Itinerary();
+        secondDayItinerary.setSubheader("Day 2");
+
+        List<Place> secondDayPlaces = new ArrayList<>();
+
+        Place secondDayFirstPlace = new Place();
+        secondDayFirstPlace.setLocation("Shinjuku Gyoen National Garden, Tokyo, Japan");
+        secondDayFirstPlace.setTimeStart(LocalTime.parse("09:30:00"));
+        secondDayFirstPlace.setTimeEnd(LocalTime.parse("11:30:00"));
+        secondDayFirstPlace.setNote("Enjoy the beautiful garden and cherry blossoms");
+        secondDayFirstPlace.setPictureLink("/exploring_japan/shinjuku_gyoen");
+
+        Place secondDaySecondPlace = new Place();
+        secondDaySecondPlace.setLocation("Meiji Shrine, Tokyo, Japan");
+        secondDaySecondPlace.setTimeStart(LocalTime.parse("12:00:00"));
+        secondDaySecondPlace.setTimeEnd(LocalTime.parse("14:00:00"));
+        secondDaySecondPlace.setNote("Visit the famous Meiji Shrine");
+        secondDaySecondPlace.setPictureLink("/exploring_japan/meiji_shrine");
+
+        Place secondDayThirdPlace = new Place();
+        secondDayThirdPlace.setLocation("Harajuku, Tokyo, Japan");
+        secondDayThirdPlace.setTimeStart(LocalTime.parse("15:00:00"));
+        secondDayThirdPlace.setTimeEnd(LocalTime.parse("18:00:00"));
+        secondDayThirdPlace.setNote("Shop and explore Takeshita Street");
+        secondDayThirdPlace.setPictureLink("/exploring_japan/harajuku");
+
+        secondDayPlaces.add(secondDayFirstPlace);
+        secondDayPlaces.add(secondDaySecondPlace);
+        secondDayPlaces.add(secondDayThirdPlace);
+
+        secondDayItinerary.setPlaces(secondDayPlaces);
+        itineraries.add(secondDayItinerary);
+
+        // Third Itinerary
+        Itinerary thirdDayItinerary = new Itinerary();
+        thirdDayItinerary.setSubheader("Day 3");
+
+        List<Place> thirdDayPlaces = new ArrayList<>();
+
+        Place thirdDayFirstPlace = new Place();
+        thirdDayFirstPlace.setLocation("Tsukiji Outer Market, Tokyo, Japan");
+        thirdDayFirstPlace.setTimeStart(LocalTime.parse("09:00:00"));
+        thirdDayFirstPlace.setTimeEnd(LocalTime.parse("11:00:00"));
+        thirdDayFirstPlace.setNote("Explore the fresh seafood market");
+        thirdDayFirstPlace.setPictureLink("/exploring_japan/tsukiji_market");
+
+        Place thirdDaySecondPlace = new Place();
+        thirdDaySecondPlace.setLocation("Imperial Palace, Tokyo, Japan");
+        thirdDaySecondPlace.setTimeStart(LocalTime.parse("12:00:00"));
+        thirdDaySecondPlace.setTimeEnd(LocalTime.parse("14:00:00"));
+        thirdDaySecondPlace.setNote("Visit the historic Imperial Palace");
+        thirdDaySecondPlace.setPictureLink("/exploring_japan/imperial_palace");
+
+        Place thirdDayThirdPlace = new Place();
+        thirdDayThirdPlace.setLocation("Ueno Park, Tokyo, Japan");
+        thirdDayThirdPlace.setTimeStart(LocalTime.parse("15:00:00"));
+        thirdDayThirdPlace.setTimeEnd(LocalTime.parse("18:00:00"));
+        thirdDayThirdPlace.setNote("Relax and enjoy Ueno Park");
+        thirdDayThirdPlace.setPictureLink("/exploring_japan/ueno_park");
+
+        thirdDayPlaces.add(thirdDayFirstPlace);
+        thirdDayPlaces.add(thirdDaySecondPlace);
+        thirdDayPlaces.add(thirdDayThirdPlace);
+
+        thirdDayItinerary.setPlaces(thirdDayPlaces);
+        itineraries.add(thirdDayItinerary);
+
+        // Add more Itineraries for Day 4 and Day 5...
+
+        trip.setItineraries(itineraries);
+
+        return trip;
+    }
+
+    public Trip generatePredefinedTrip3(){
+
+        Trip trip = new Trip();
+        trip.setTitle("European Adventure");
+        trip.setLocation("Europe");
+        trip.setStartDate(LocalDateUtil.parseDate("2023-11-01"));
+        trip.setEndDate(LocalDateUtil.parseDate("2023-11-07"));
+        trip.setCurrency("EUR");
+        trip.setTotalBudget(10000.00);
+        trip.setPictureLink("/european_adventure/image1");
+
+        List<Itinerary> itineraries = new ArrayList<>();
+
+        // Day 1
+        Itinerary day1Itinerary = new Itinerary();
+        day1Itinerary.setSubheader("Day 1");
+
+        List<Place> day1Places = new ArrayList<>();
+
+        Place day1FirstPlace = new Place();
+        day1FirstPlace.setLocation("Arrival at Paris Charles de Gaulle Airport, France");
+        day1FirstPlace.setTimeStart(LocalTime.parse("09:00:00"));
+        day1FirstPlace.setTimeEnd(LocalTime.parse("10:00:00"));
+        day1FirstPlace.setNote("Arrival and immigration");
+        day1FirstPlace.setPictureLink("/european_adventure/paris_airport");
+
+        Place day1SecondPlace = new Place();
+        day1SecondPlace.setLocation("Eiffel Tower, Paris, France");
+        day1SecondPlace.setTimeStart(LocalTime.parse("11:00:00"));
+        day1SecondPlace.setTimeEnd(LocalTime.parse("14:00:00"));
+        day1SecondPlace.setNote("Visit the iconic Eiffel Tower");
+        day1SecondPlace.setPictureLink("/european_adventure/eiffel_tower");
+
+        Place day1ThirdPlace = new Place();
+        day1ThirdPlace.setLocation("Louvre Museum, Paris, France");
+        day1ThirdPlace.setTimeStart(LocalTime.parse("15:00:00"));
+        day1ThirdPlace.setTimeEnd(LocalTime.parse("18:00:00"));
+        day1ThirdPlace.setNote("Explore the famous Louvre Museum");
+        day1ThirdPlace.setPictureLink("/european_adventure/louvre_museum");
+
+        day1Places.add(day1FirstPlace);
+        day1Places.add(day1SecondPlace);
+        day1Places.add(day1ThirdPlace);
+
+        day1Itinerary.setPlaces(day1Places);
+        itineraries.add(day1Itinerary);
+
+        // Day 2
+        Itinerary day2Itinerary = new Itinerary();
+        day2Itinerary.setSubheader("Day 2");
+
+        List<Place> day2Places = new ArrayList<>();
+
+        Place day2FirstPlace = new Place();
+        day2FirstPlace.setLocation("Versailles Palace, France");
+        day2FirstPlace.setTimeStart(LocalTime.parse("09:00:00"));
+        day2FirstPlace.setTimeEnd(LocalTime.parse("12:00:00"));
+        day2FirstPlace.setNote("Visit the magnificent Versailles Palace");
+        day2FirstPlace.setPictureLink("/european_adventure/versailles_palace");
+
+        Place day2SecondPlace = new Place();
+        day2SecondPlace.setLocation("Montmartre, Paris, France");
+        day2SecondPlace.setTimeStart(LocalTime.parse("13:00:00"));
+        day2SecondPlace.setTimeEnd(LocalTime.parse("16:00:00"));
+        day2SecondPlace.setNote("Explore the artsy neighborhood of Montmartre");
+        day2SecondPlace.setPictureLink("/european_adventure/montmartre");
+
+        day2Places.add(day2FirstPlace);
+        day2Places.add(day2SecondPlace);
+
+        day2Itinerary.setPlaces(day2Places);
+        itineraries.add(day2Itinerary);
+
+        // Day 3
+        Itinerary day3Itinerary = new Itinerary();
+        day3Itinerary.setSubheader("Day 3");
+
+        List<Place> day3Places = new ArrayList<>();
+
+        Place day3FirstPlace = new Place();
+        day3FirstPlace.setLocation("Colosseum, Rome, Italy");
+        day3FirstPlace.setTimeStart(LocalTime.parse("10:00:00"));
+        day3FirstPlace.setTimeEnd(LocalTime.parse("14:00:00"));
+        day3FirstPlace.setNote("Visit the ancient Colosseum");
+        day3FirstPlace.setPictureLink("/european_adventure/colosseum");
+
+        Place day3SecondPlace = new Place();
+        day3SecondPlace.setLocation("Roman Forum, Rome, Italy");
+        day3SecondPlace.setTimeStart(LocalTime.parse("15:00:00"));
+        day3SecondPlace.setTimeEnd(LocalTime.parse("18:00:00"));
+        day3SecondPlace.setNote("Explore the historic Roman Forum");
+        day3SecondPlace.setPictureLink("/european_adventure/roman_forum");
+
+        day3Places.add(day3FirstPlace);
+        day3Places.add(day3SecondPlace);
+
+        day3Itinerary.setPlaces(day3Places);
+        itineraries.add(day3Itinerary);
+
+        // ... (Existing code for Day 1 to Day 3)
+
+// Day 4
+        Itinerary day4Itinerary = new Itinerary();
+        day4Itinerary.setSubheader("Day 4");
+
+        List<Place> day4Places = new ArrayList<>();
+
+        Place day4FirstPlace = new Place();
+        day4FirstPlace.setLocation("Sagrada Familia, Barcelona, Spain");
+        day4FirstPlace.setTimeStart(LocalTime.parse("09:00:00"));
+        day4FirstPlace.setTimeEnd(LocalTime.parse("12:00:00"));
+        day4FirstPlace.setNote("Visit the iconic Sagrada Familia");
+        day4FirstPlace.setPictureLink("/european_adventure/sagrada_familia");
+
+        Place day4SecondPlace = new Place();
+        day4SecondPlace.setLocation("Park Güell, Barcelona, Spain");
+        day4SecondPlace.setTimeStart(LocalTime.parse("13:00:00"));
+        day4SecondPlace.setTimeEnd(LocalTime.parse("16:00:00"));
+        day4SecondPlace.setNote("Explore the beautiful Park Güell");
+        day4SecondPlace.setPictureLink("/european_adventure/park_guell");
+
+        day4Places.add(day4FirstPlace);
+        day4Places.add(day4SecondPlace);
+
+        day4Itinerary.setPlaces(day4Places);
+        itineraries.add(day4Itinerary);
+
+// Day 5
+        Itinerary day5Itinerary = new Itinerary();
+        day5Itinerary.setSubheader("Day 5");
+
+        List<Place> day5Places = new ArrayList<>();
+
+        Place day5FirstPlace = new Place();
+        day5FirstPlace.setLocation("Amsterdam Canals, Netherlands");
+        day5FirstPlace.setTimeStart(LocalTime.parse("10:00:00"));
+        day5FirstPlace.setTimeEnd(LocalTime.parse("14:00:00"));
+        day5FirstPlace.setNote("Explore the charming Amsterdam canals");
+        day5FirstPlace.setPictureLink("/european_adventure/amsterdam_canals");
+
+        Place day5SecondPlace = new Place();
+        day5SecondPlace.setLocation("Van Gogh Museum, Amsterdam, Netherlands");
+        day5SecondPlace.setTimeStart(LocalTime.parse("15:00:00"));
+        day5SecondPlace.setTimeEnd(LocalTime.parse("18:00:00"));
+        day5SecondPlace.setNote("Visit the famous Van Gogh Museum");
+        day5SecondPlace.setPictureLink("/european_adventure/van_gogh_museum");
+
+        day5Places.add(day5FirstPlace);
+        day5Places.add(day5SecondPlace);
+
+        day5Itinerary.setPlaces(day5Places);
+        itineraries.add(day5Itinerary);
+
+// Day 6
+        Itinerary day6Itinerary = new Itinerary();
+        day6Itinerary.setSubheader("Day 6");
+
+        List<Place> day6Places = new ArrayList<>();
+
+        Place day6FirstPlace = new Place();
+        day6FirstPlace.setLocation("Neuschwanstein Castle, Germany");
+        day6FirstPlace.setTimeStart(LocalTime.parse("09:00:00"));
+        day6FirstPlace.setTimeEnd(LocalTime.parse("12:00:00"));
+        day6FirstPlace.setNote("Visit the fairytale-like Neuschwanstein Castle");
+        day6FirstPlace.setPictureLink("/european_adventure/neuschwanstein_castle");
+
+        Place day6SecondPlace = new Place();
+        day6SecondPlace.setLocation("Marienplatz, Munich, Germany");
+        day6SecondPlace.setTimeStart(LocalTime.parse("13:00:00"));
+        day6SecondPlace.setTimeEnd(LocalTime.parse("16:00:00"));
+        day6SecondPlace.setNote("Explore the vibrant Marienplatz in Munich");
+        day6SecondPlace.setPictureLink("/european_adventure/marienplatz");
+
+        day6Places.add(day6FirstPlace);
+        day6Places.add(day6SecondPlace);
+
+        day6Itinerary.setPlaces(day6Places);
+        itineraries.add(day6Itinerary);
+
+// Day 7
+        Itinerary day7Itinerary = new Itinerary();
+        day7Itinerary.setSubheader("Day 7");
+
+        List<Place> day7Places = new ArrayList<>();
+
+        Place day7FirstPlace = new Place();
+        day7FirstPlace.setLocation("Charles Bridge, Prague, Czech Republic");
+        day7FirstPlace.setTimeStart(LocalTime.parse("10:00:00"));
+        day7FirstPlace.setTimeEnd(LocalTime.parse("14:00:00"));
+        day7FirstPlace.setNote("Walk across the historic Charles Bridge");
+        day7FirstPlace.setPictureLink("/european_adventure/charles_bridge");
+
+        Place day7SecondPlace = new Place();
+        day7SecondPlace.setLocation("Prague Castle, Czech Republic");
+        day7SecondPlace.setTimeStart(LocalTime.parse("15:00:00"));
+        day7SecondPlace.setTimeEnd(LocalTime.parse("18:00:00"));
+        day7SecondPlace.setNote("Visit the majestic Prague Castle");
+        day7SecondPlace.setPictureLink("/european_adventure/prague_castle");
+
+        day7Places.add(day7FirstPlace);
+        day7Places.add(day7SecondPlace);
+
+        day7Itinerary.setPlaces(day7Places);
+        itineraries.add(day7Itinerary);
+
+        trip.setItineraries(itineraries);
+
+        return trip;
+
+    }
 
 
 }
