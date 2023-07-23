@@ -28,88 +28,75 @@ import java.util.UUID;
 @Service
 public class AccountService {
 
-    @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
     private VerificationTokenRepository verificationTokenRepository;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
+
+    public AccountService(AccountRepository accountRepository, VerificationTokenRepository verificationTokenRepository,
+            PasswordEncoder passwordEncoder, ApplicationEventPublisher applicationEventPublisher) {
+        this.accountRepository = accountRepository;
+        this.verificationTokenRepository = verificationTokenRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 
     public String folderPath = "C:\\Users\\XXX\\Pictures\\"; // dummy folderpath
 
-    public boolean createAccount(AccountCreateDTO accountDTO, String applicationUrl){
+    public boolean createAccount(AccountCreateDTO accountDTO, String applicationUrl) {
         String defaultRole = "USER";
         LocalDateTime timeNow = LocalDateTime.now();
-        Account account = Account.builder().
-                displayName(accountDTO.getDisplayName()).
-                email(accountDTO.getEmail()).
-                username(accountDTO.getUsername()).
-                password(passwordEncoder.encode(accountDTO.getPassword())).
-                role(defaultRole).
-                build();
+        Account account = Account.builder().displayName(accountDTO.getDisplayName()).email(accountDTO.getEmail())
+                .username(accountDTO.getUsername()).password(passwordEncoder.encode(accountDTO.getPassword()))
+                .role(defaultRole).build();
 
         applicationEventPublisher.publishEvent(new RegistrationCompleteEvent(account,
                 applicationUrl));
 
-
-
         accountRepository.save(account);
-
 
         return true;
     }
 
-    public List<AccountDetailDTO> getAccounts(){
+    public List<AccountDetailDTO> getAccounts() {
         List<Account> accounts = accountRepository.findAll();
 
         List<AccountDetailDTO> accountDTOList = new ArrayList<AccountDetailDTO>();
-        for(Account eachAccount : accounts){
-            AccountDetailDTO accountDTO = AccountDetailDTO.builder().
-                    displayName(eachAccount.getDisplayName()).
-                    email(eachAccount.getEmail()).
-                    username(eachAccount.getUsername()).
-                    imageUrl(eachAccount.getImageUrl()).
-                    created(eachAccount.getCreated()).
-                    build();
+        for (Account eachAccount : accounts) {
+            AccountDetailDTO accountDTO = AccountDetailDTO.builder().displayName(eachAccount.getDisplayName())
+                    .email(eachAccount.getEmail()).username(eachAccount.getUsername())
+                    .imageUrl(eachAccount.getImageUrl()).created(eachAccount.getCreated()).build();
             accountDTOList.add(accountDTO);
         }
         return accountDTOList;
     }
 
-    public void createVerificationToken(Account account, String token){
-        LocalDateTime expirationTimestamp = LocalDateTimeUtil.
-                calculateExpirationTimestamp(10);
-        VerificationToken verificationToken = VerificationToken.builder().
-                token(token).
-                expirationTimestamp(expirationTimestamp).
-                account(account).
-                build();
+    public void createVerificationToken(Account account, String token) {
+        LocalDateTime expirationTimestamp = LocalDateTimeUtil.calculateExpirationTimestamp(10);
+        VerificationToken verificationToken = VerificationToken.builder().token(token)
+                .expirationTimestamp(expirationTimestamp).account(account).build();
 
         verificationTokenRepository.save(verificationToken);
 
-
     }
 
-    public String validateVerficiationToken(String token){
+    public String validateVerificationToken(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
 
-        if(verificationToken == null){
+        if (verificationToken == null) {
             return "invalid";
         }
 
         Account account = verificationToken.getAccount();
         Calendar cal = Calendar.getInstance();
 
-        if(verificationToken.getExpirationTimestamp().isBefore(LocalDateTime.now())){
-//            verificationTokenRepository.delete(verificationToken);
+        if (verificationToken.getExpirationTimestamp().isBefore(LocalDateTime.now())) {
+            // verificationTokenRepository.delete(verificationToken);
             return "expired";
         }
-
 
         account.setVerified(true);
         verificationTokenRepository.delete(verificationToken);
@@ -117,7 +104,7 @@ public class AccountService {
         return "valid";
     }
 
-    public VerificationToken generateNewVerificationToken(String oldToken, String applicationUrl){
+    public VerificationToken generateNewVerificationToken(String oldToken, String applicationUrl) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(oldToken);
         Account account = verificationToken.getAccount();
 
@@ -127,14 +114,12 @@ public class AccountService {
         return verificationToken;
     }
 
-
-
     public String deleteAccount(String username) {
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
         account.setDeleted(true);
         account.setDeletedAt(LocalDateTime.now());
         accountRepository.save(account);
-        if(accountRepository.findByUsername(username).getDeletedAt() != null){
+        if (accountRepository.findByUsername(username).getDeletedAt() != null) {
             return "Account " + username + " was deleted successfully.";
         }
         return null;
@@ -142,7 +127,7 @@ public class AccountService {
 
     // Upload, Get, Delete Profile Picture
 
-    public String uploadProfileImage(String username, MultipartFile file)throws IOException {
+    public String uploadProfileImage(String username, MultipartFile file) throws IOException {
         String filePath = folderPath + file.getOriginalFilename();
         AccountDetailDTO newAccountDetails = retrieveCurrentProfileData(username);
         newAccountDetails.setImageUrl(filePath);
@@ -150,19 +135,18 @@ public class AccountService {
         return "File uploaded successfully: " + filePath;
     }
 
-
-    public byte[] getProfileImage(String username) throws IOException{
+    public byte[] getProfileImage(String username) throws IOException {
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
         String filePath = account.getImageUrl();
         byte[] images = Files.readAllBytes(new File(filePath).toPath());
         return images;
     }
 
-    public String deleteProfileImage(String username){
+    public String deleteProfileImage(String username) {
         AccountDetailDTO accountDetailDTO = retrieveCurrentProfileData(username);
         accountDetailDTO.setImageUrl(null);
         saveNewProfileDetails(username, accountDetailDTO);
-        if(accountRepository.findByUsernameAndIsDeletedFalse(username).getImageUrl() == null) {
+        if (accountRepository.findByUsernameAndIsDeletedFalse(username).getImageUrl() == null) {
             return "Profile picture of " + username + " deleted successfully.";
         }
         return null;
@@ -170,17 +154,12 @@ public class AccountService {
 
     // To retrieve current user profile data from db
 
-    public AccountDetailDTO retrieveCurrentProfileData(String username){
+    public AccountDetailDTO retrieveCurrentProfileData(String username) {
         Account currentProfile = accountRepository.findByUsernameAndIsDeletedFalse(username);
-        AccountDetailDTO accountDetailDTO = AccountDetailDTO.builder().
-                displayName(currentProfile.getDisplayName()).
-                email(currentProfile.getEmail()).
-                username(username).
-                imageUrl(currentProfile.getImageUrl()).
-                created(currentProfile.getCreated()).
-                loginAttempt(currentProfile.getLoginAttempt()).
-                setting(currentProfile.getSetting()).
-                build();
+        AccountDetailDTO accountDetailDTO = AccountDetailDTO.builder().displayName(currentProfile.getDisplayName())
+                .email(currentProfile.getEmail()).username(username).imageUrl(currentProfile.getImageUrl())
+                .created(currentProfile.getCreated()).loginAttempt(currentProfile.getLoginAttempt())
+                .setting(currentProfile.getSetting()).build();
         return accountDetailDTO;
     }
 
@@ -194,9 +173,5 @@ public class AccountService {
         account.setImageUrl(accountDetailDTO.getImageUrl());
         accountRepository.save(account);
     }
-
-
-
-
 
 }
