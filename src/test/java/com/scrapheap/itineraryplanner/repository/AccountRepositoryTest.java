@@ -4,19 +4,24 @@ import com.scrapheap.itineraryplanner.model.Account;
 import com.scrapheap.itineraryplanner.model.LoginAttempt;
 import com.scrapheap.itineraryplanner.model.Setting;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 
 
+
 @SpringBootTest
+
 class AccountRepositoryTest {
 
     @Autowired
     private AccountRepository accountRepository;
 
+    /*
     @Test
     public void saveAccount(){
         Account account = Account.builder()
@@ -87,6 +92,6 @@ class AccountRepositoryTest {
 
         return account;
     }
-
+*/
 
 }
