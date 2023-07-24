@@ -27,11 +27,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+        
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.1.2
-      with: 
-        name: artifact
-        path: itineraryplanners-backend
-
+      
+    - name: Generate Deployment Package
+      run: zip -r deploy.zip . -x '*.git*'
+      
