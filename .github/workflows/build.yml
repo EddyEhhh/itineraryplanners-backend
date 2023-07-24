@@ -31,4 +31,7 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.2
+      with: 
+        name: artifact
+        path: itineraryplanners-backend
 
