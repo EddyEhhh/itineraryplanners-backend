@@ -170,7 +170,6 @@ public class AccountService {
     }
 
     // Saves edited profile details
-
     //TODO: double check imageId part
     public void updateProfile(String username, AccountDetailDTO accountDetailDTO) {
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
