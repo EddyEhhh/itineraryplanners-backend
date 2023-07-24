@@ -23,7 +23,10 @@ public class CorsConfig {
                 "X-Requested-With", "accept", "Origin",
                 "Access-Control-Request-Method", "Access-Control-Request-Headers",
                 "Access-Control-Allow-Origin"));
-        configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setExposedHeaders(List.of("Authorization", "Content-Type",
+                "X-Requested-With", "accept", "Origin",
+                "Access-Control-Request-Method", "Access-Control-Request-Headers",
+                "Access-Control-Allow-Origin"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", configuration);

@@ -171,7 +171,7 @@ public class AuthenticationService {
                 .displayName(account.getDisplayName())
                 .email(account.getEmail())
                 .username(account.getUsername())
-                .imageUrl(account.getImageUrl())
+                .imageId(account.getImageId())
                 .created(account.getCreated())
 //                .loginAttempt(account.getLoginAttempt())
 //                .setting(account.getSetting())

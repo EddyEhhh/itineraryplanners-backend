@@ -13,6 +13,8 @@ import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
 import com.scrapheap.itineraryplanner.event.RegistrationCompleteEvent;
 import com.scrapheap.itineraryplanner.model.Account;
 import com.scrapheap.itineraryplanner.model.VerificationToken;
+import com.scrapheap.itineraryplanner.s3.S3Buckets;
+import com.scrapheap.itineraryplanner.s3.S3Service;
 import com.scrapheap.itineraryplanner.util.LocalDateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.ObjectNotFoundException;
@@ -24,8 +26,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,8 +57,11 @@ public class AccountService {
     @Autowired
     private AuthenticationService authenticationService;
 
-    public String folderPath = "C:\\Users\\XXX\\Pictures\\"; // dummy folderpath
+    @Autowired
+    private S3Service s3Service;
 
+    @Autowired
+    private S3Buckets s3Buckets;
 
     public List<AccountDetailDTO> getAccounts(){
         List<Account> accounts = accountRepository.findAll();
@@ -64,7 +72,7 @@ public class AccountService {
                     displayName(eachAccount.getDisplayName()).
                     email(eachAccount.getEmail()).
                     username(eachAccount.getUsername()).
-                    imageUrl(eachAccount.getImageUrl()).
+                    imageId(eachAccount.getImageId()).
                     created(eachAccount.getCreated()).
                     build();
             accountDTOList.add(accountDTO);
@@ -99,32 +107,46 @@ public class AccountService {
             throw new UnauthorizedException("No permission");
         }
 
-        String filePath = folderPath + file.getOriginalFilename();
-        AccountDetailDTO newAccountDetails = getProfile(username);
-        newAccountDetails.setImageUrl(filePath);
-        updateProfile(username, newAccountDetails);
-        return "File uploaded successfully: " + filePath;
-    }
+        String profileImageId = UUID.randomUUID().toString();
+        //puts into aws
+        try {
+            s3Service.putObject(
+                    s3Buckets.getAccount(),
+                    "profile-images/%s/%s".formatted(username, profileImageId),
+                    file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-
-    public byte[] getProfileImage(String username) throws IOException{
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
-        String filePath = account.getImageUrl();
-        byte[] images = Files.readAllBytes(new File(filePath).toPath());
-        return images;
+        account.setImageId(profileImageId);
+        accountRepository.save(account);
+
+        return "File uploaded Successfully";
     }
+
+    public String getProfileImage(String username) throws IOException{
+        Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
+        if(account.getImageId().isBlank()){
+            throw new RuntimeException("account profile image not found");
+        }
+        var profileImageId = account.getImageId();
+        return "https://ip-account.s3.ap-southeast-1.amazonaws.com/profile-images/" + username + "/" + profileImageId;
+        // return s3Service.getObject(s3Buckets.getAccount(), "profile-images/%s/%s".formatted(username, profileImageId));
+    }
+
 
     public String deleteProfileImage(String username){
-
+        //TODO: implement this
         if(!authenticationService.checkUsernameSession(username)){
             throw new UnauthorizedException("No permission");
         }
 
         AccountDetailDTO accountDetailDTO = getProfile(username);
-        accountDetailDTO.setImageUrl(null);
+        accountDetailDTO.setImageId(null);
         updateProfile(username, accountDetailDTO);
 
-        if(accountRepository.findByUsernameAndIsDeletedFalse(username).getImageUrl() == null) {
+        if(accountRepository.findByUsernameAndIsDeletedFalse(username).getImageId() == null) {
             return "Profile picture of " + username + " deleted successfully.";
         }
 
@@ -139,7 +161,7 @@ public class AccountService {
                 displayName(currentProfile.getDisplayName()).
                 email(currentProfile.getEmail()).
                 username(username).
-                imageUrl(currentProfile.getImageUrl()).
+                imageId(currentProfile.getImageId()).
                 created(currentProfile.getCreated()).
 //                loginAttempt(currentProfile.getLoginAttempt()).
                 setting(currentProfile.getSetting()).
@@ -149,12 +171,13 @@ public class AccountService {
 
     // Saves edited profile details
 
+    //TODO: double check imageId part
     public void updateProfile(String username, AccountDetailDTO accountDetailDTO) {
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
         account.setDisplayName(accountDetailDTO.getDisplayName());
         account.setEmail(accountDetailDTO.getEmail());
         account.setUsername(accountDetailDTO.getUsername());
-        account.setImageUrl(accountDetailDTO.getImageUrl());
+        account.setImageId(accountDetailDTO.getImageId());
         accountRepository.save(account);
     }
 
@@ -210,7 +233,5 @@ public class AccountService {
             return false;
         }
     }
-
-
 
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -31,8 +32,17 @@ public class AccountController {
         return accountService.getAccounts();
     }
 
+//    @PutMapping("/{username}/edit")
+//    public ResponseEntity<?> updateAccount(@PathVariable("username") String username) {
+//        String updateAccountResponse = accountService.updateProfile(username);
+//        return ResponseEntity.status(HttpStatus.OK)
+//                .body(updateAccountResponse);
+//    }
 
-    @PutMapping("/{username}/imageUpload")
+
+    @PostMapping(value = "/{username}/imageUpload",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ResponseEntity<?> uploadProfileImage(@PathVariable("username") String username,
                                                 @RequestParam("image")MultipartFile file) throws IOException {
         String uploadImageResponse = accountService.uploadProfileImage(username, file);
@@ -40,13 +50,12 @@ public class AccountController {
                 .body(uploadImageResponse);
     }
 
-    @GetMapping("/{username}/imageRetrieve")
-    public ResponseEntity<?> retrieveProfileImage(@PathVariable String username) throws IOException{
-        byte[] imageData = accountService.getProfileImage(username);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf("image/png"))
-                .body(imageData);
+    @GetMapping(value = "/{username}/imageRetrieve"
+    )
+    public String retrieveProfileImage(@PathVariable("username") String username) throws IOException{
+        return accountService.getProfileImage(username);
     }
+
 
     @DeleteMapping("/{username}/imageDelete")
     public ResponseEntity<?> deleteProfileImage(@PathVariable String username){
@@ -81,5 +90,6 @@ public class AccountController {
         boolean response = accountService.changePassword(changePasswordDTO, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
 
 }
