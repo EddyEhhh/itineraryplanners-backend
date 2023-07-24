@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class ItineraryPlannerApplication {
 
-
+// Testing123
     public static void main(String[] args) {
         SpringApplication.run(ItineraryPlannerApplication.class, args);
     }
