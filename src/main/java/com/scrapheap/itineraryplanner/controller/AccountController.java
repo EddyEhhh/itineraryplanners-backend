@@ -32,12 +32,13 @@ public class AccountController {
         return accountService.getAccounts();
     }
 
-//    @PutMapping("/{username}/edit")
-//    public ResponseEntity<?> updateAccount(@PathVariable("username") String username) {
-//        String updateAccountResponse = accountService.updateProfile(username);
-//        return ResponseEntity.status(HttpStatus.OK)
-//                .body(updateAccountResponse);
-//    }
+    @PutMapping("/{username}/edit")
+    public ResponseEntity<?> updateAccount(@PathVariable("username")String username,
+                                           @RequestBody AccountDetailDTO accountDetailDTO) {
+        String updateAccountResponse = accountService.updateProfile(username, accountDetailDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(updateAccountResponse);
+    }
 
 
     @PostMapping(value = "/{username}/imageUpload",

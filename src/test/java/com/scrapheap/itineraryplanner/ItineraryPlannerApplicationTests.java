@@ -12,7 +12,7 @@ class ItineraryPlannerApplicationTests {
     void contextLoads() {
     }
 
-    
+
      */
 
 }

@@ -171,13 +171,12 @@ public class AccountService {
 
     // Saves edited profile details
     //TODO: double check imageId part
-    public void updateProfile(String username, AccountDetailDTO accountDetailDTO) {
+    public String updateProfile(String username, AccountDetailDTO accountDetailDTO) {
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
         account.setDisplayName(accountDetailDTO.getDisplayName());
         account.setEmail(accountDetailDTO.getEmail());
-        account.setUsername(accountDetailDTO.getUsername());
-        account.setImageId(accountDetailDTO.getImageId());
         accountRepository.save(account);
+        return "new account details saved";
     }
 
     // forgot password
