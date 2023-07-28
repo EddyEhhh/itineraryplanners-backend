@@ -19,7 +19,7 @@ public class AccountDetailDTO {
 
     private String username;
 
-    private String imageUrl = null;
+    private String imageId;
 
     private LocalDateTime created;
 
