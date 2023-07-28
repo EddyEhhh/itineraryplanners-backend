@@ -28,7 +28,7 @@ public class ItineraryService {
             Itinerary itinerary = Itinerary.builder()
                     .orderNumber(order++)
                     .subheader(itineraryDetailDTO.getSubheader())
-                    .places(placeService.convertToEntityList(itineraryDetailDTO.getPlace()))
+                    .places(placeService.convertToEntityList(itineraryDetailDTO.getPlaces()))
                     .build();
 
             itineraryList.add(itinerary);
@@ -49,7 +49,7 @@ public class ItineraryService {
         for(Itinerary itinerary : itinerarys) {
             ItineraryDetailDTO itineraryDetailDTO = ItineraryDetailDTO.builder()
                     .subheader(itinerary.getSubheader())
-                    .place(placeService.convertToDTOList(itinerary.getPlaces()))
+                    .places(placeService.convertToDTOList(itinerary.getPlaces()))
                     .build();
             itineraryListDTO.add(itineraryDetailDTO);
 
