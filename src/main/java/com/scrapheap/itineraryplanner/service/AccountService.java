@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,6 +63,9 @@ public class AccountService {
 
     @Autowired
     private S3Buckets s3Buckets;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<AccountDetailDTO> getAccounts(){
         List<Account> accounts = accountRepository.findAll();
@@ -218,6 +222,9 @@ public class AccountService {
     public boolean changePassword(ChangePasswordDTO changePasswordDTO, String username) {
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
         String password = account.getPassword();
+
+        //TODO: find some way to check oldpassword equals to new password (encoded)
+
         if (changePasswordDTO.getOldPassword().equals(password)) {
             if(validPassword(changePasswordDTO.getNewPassword())) {
                 account.setPassword(changePasswordDTO.getNewPassword());

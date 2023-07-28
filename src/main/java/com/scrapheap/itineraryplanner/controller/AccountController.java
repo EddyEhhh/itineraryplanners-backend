@@ -92,5 +92,13 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{username}/updatePassword")
+    public ResponseEntity<?> updatePassword(@PathVariable("username") String username,
+                                            @RequestBody ChangePasswordDTO changePasswordDTO) {
+        boolean response = accountService.changePassword(changePasswordDTO, username);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 
 }
