@@ -32,6 +32,8 @@ public class TripDetailDTO {
 
     private String pictureLink;
 
+    private boolean isPublic;
+
     @OneToMany(
             cascade = CascadeType.ALL,
             fetch= FetchType.LAZY,
@@ -40,6 +42,6 @@ public class TripDetailDTO {
     @JoinColumn(
             referencedColumnName = "id"
     )
-    private List<ItineraryDetailDTO> itinerary;
+    private List<ItineraryDetailDTO> itinerarys;
 
 }

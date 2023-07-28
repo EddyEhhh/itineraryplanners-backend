@@ -105,7 +105,7 @@ public class PopulateSampleData {
         Trip trip1 = generatePredefinedTrip1();
         trip1.setAccount(account);
 
-        Trip trip2 =  generatePredefinedTrip2();
+        Trip trip2 =  generatePredefinedPublicTrip2();
         trip2.setAccount(account);
 
         Trip trip3 =  generatePredefinedTrip3();
@@ -331,12 +331,12 @@ public class PopulateSampleData {
                 itineraries.add(thirdDayItinerary);
 
                 // Set the list of Itineraries for the Trip
-                trip.setItineraries(itineraries);
+                trip.setItinerarys(itineraries);
 
                 return trip;
             }
 
-    public Trip generatePredefinedTrip2(){
+    public Trip generatePredefinedPublicTrip2(){
 
         Trip trip = new Trip();
         trip.setTitle("Exploring Japan");
@@ -346,6 +346,7 @@ public class PopulateSampleData {
         trip.setCurrency("JPY");
         trip.setTotalBudget(8000.00);
         trip.setPictureLink("/exploring_japan/image1");
+        trip.setPublic(true);
 
         List<Itinerary> itineraries = new ArrayList<>();
 
@@ -453,7 +454,7 @@ public class PopulateSampleData {
 
         // Add more Itineraries for Day 4 and Day 5...
 
-        trip.setItineraries(itineraries);
+        trip.setItinerarys(itineraries);
 
         return trip;
     }
@@ -663,7 +664,7 @@ public class PopulateSampleData {
         day7Itinerary.setPlaces(day7Places);
         itineraries.add(day7Itinerary);
 
-        trip.setItineraries(itineraries);
+        trip.setItinerarys(itineraries);
 
         return trip;
 

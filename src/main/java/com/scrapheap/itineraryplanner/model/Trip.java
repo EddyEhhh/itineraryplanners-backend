@@ -34,6 +34,8 @@ public class Trip {
 
     private String pictureLink;
 
+    private boolean isPublic;
+
     @OneToMany(
             cascade = CascadeType.ALL,
             fetch=FetchType.EAGER,
@@ -42,7 +44,7 @@ public class Trip {
     @JoinColumn(
             referencedColumnName = "id"
     )
-    private List<Itinerary> itineraries;
+    private List<Itinerary> itinerarys;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")

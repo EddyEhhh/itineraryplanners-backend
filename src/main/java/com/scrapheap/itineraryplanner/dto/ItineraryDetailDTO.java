@@ -19,6 +19,6 @@ public class ItineraryDetailDTO {
 
     private String subheader;
 
-    private List<PlaceDetailDTO> place;
+    private List<PlaceDetailDTO> places;
 
 }

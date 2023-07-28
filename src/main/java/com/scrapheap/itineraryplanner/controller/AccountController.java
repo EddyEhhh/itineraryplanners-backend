@@ -25,11 +25,11 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping
-    public List<AccountDetailDTO> getAcccounts(){
-        log.info(accountService.getAccounts().toString());
-        return accountService.getAccounts();
-    }
+//    @GetMapping
+//    public List<AccountDetailDTO> getAcccounts(){
+//        log.info(accountService.getAccounts().toString());
+//        return accountService.getAccounts();
+//    }
 
 
     @PutMapping("/{username}/imageUpload")
