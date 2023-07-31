@@ -37,7 +37,7 @@ jobs:
       run: mvn -B package --file pom.xml
       
     - name: Upload Artifacts
-      working-directory: ${{ env.applicationfolder }}/target
+      working-directory: ./target
       run: aws s3 cp *.war s3://${{ env.S3BUCKET }}/
       
 #     - name: Generate Deployment Package
