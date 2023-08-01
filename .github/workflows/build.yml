@@ -6,31 +6,57 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Build and Test
+name: Build and Deploy
 
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+
+env:
+  applicationfolder: itineraryplanners-backend
+  AWS_REGION: ap-southeast-1
+  S3BUCKET: elasticbeanstalk-ap-southeast-1-837939967928
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-        
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-      
-    - name: Generate Deployment Package
-      run: zip -r deploy.zip . -x '*.git*'
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B package -DskipTests --file pom.xml
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact
+          path: target/backend-0.0.1-SNAPSHOT.jar
+
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download JAR
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v13
+        with:
+          aws_access_key: AKIA4GGI5G64P7R6WT6O
+          aws_secret_key: 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
+          use_existing_version_if_available: false
+          application_name: theitineraryplanner
+          environment_name: Theitineraryplanner-env
+          version_label: ${{github.SHA}}
+          region: ap-southeast-1
+          deployment_package: backend-0.0.1-SNAPSHOT.jar
+
       
