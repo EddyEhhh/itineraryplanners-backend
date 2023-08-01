@@ -56,7 +56,7 @@ jobs:
           application_name: theitineraryplanner
           environment_name: Theitineraryplanner-env
           version_label: ${{github.SHA}}
-          region: us-east-1
-          deployment_package: backend-0.0.1-SNAPSHOT.jar    
+          region: ap-southeast-1
+          deployment_package: backend-0.0.1-SNAPSHOT.jar
     
       
