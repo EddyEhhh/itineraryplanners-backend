@@ -38,14 +38,16 @@ public class Place{
     private String pictureLink;
 
     @OneToOne(cascade=CascadeType.ALL,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
     )
     @JoinColumn(
             referencedColumnName = "id")
     private Flight flight;
 
     @OneToOne(cascade=CascadeType.ALL,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
     )
     @JoinColumn(
             referencedColumnName = "id")

@@ -24,7 +24,10 @@ public class Itinerary {
     private String subheader;
 
     @OneToMany(
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            fetch=FetchType.EAGER,
+            orphanRemoval = true
+
     )
     @JoinColumn(
             referencedColumnName = "id"
