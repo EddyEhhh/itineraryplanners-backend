@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(path = "api/v1/accounts")
 @Slf4j
