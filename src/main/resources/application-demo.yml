@@ -3,16 +3,16 @@ server:
 
 
 spring:
-  profiles:
-    active: @spring.profiles.active@
+#  profiles:
+#    active: @spring.profiles.active@
   jpa:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
   datasource:
-    url: jdbc:mysql://${database.host}:${database.port}/${database.schema}
-    username: ${database.username}
-    password: ${database.password}
+    url: jdbc:mysql://itineraryplanner.cptumifiqa9a.ap-southeast-1.rds.amazonaws.com:3306/itineraryplanner
+    username: admin
+    password: jtctlyjwwfpatjh3134$
     driverClassName: com.mysql.cj.jdbc.Driver
   mail:
     host: ${mail.host}
@@ -32,4 +32,4 @@ aws:
   region: ap-southeast-1
   s3:
     buckets:
-      account: ip-account
+      account: theitineraryplanner

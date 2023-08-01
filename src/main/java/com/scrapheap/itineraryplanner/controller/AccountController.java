@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(path = "api/v1/accounts")
 @Slf4j
@@ -84,6 +85,14 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/forgotPassword/token")
     public ResponseEntity<?> changePassword(@PathVariable ChangePasswordDTO changePasswordDTO, String username) {
+        boolean response = accountService.changePassword(changePasswordDTO, username);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{username}/updatePassword")
+    public ResponseEntity<?> updatePassword(@PathVariable("username") String username,
+                                            @RequestBody ChangePasswordDTO changePasswordDTO) {
         boolean response = accountService.changePassword(changePasswordDTO, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
