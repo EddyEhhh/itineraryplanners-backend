@@ -32,4 +32,4 @@ aws:
   region: ap-southeast-1
   s3:
     buckets:
-      account: theitineraryplanner
+      account: ip-account
