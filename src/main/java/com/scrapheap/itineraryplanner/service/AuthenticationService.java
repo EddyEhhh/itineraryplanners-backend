@@ -61,11 +61,15 @@ public class AuthenticationService {
 
     public String register(AccountCreateDTO accountDTO, String applicationUrl){
 
+//        log.info("TEST: " + accountRepository.findByUsernameAndIsDeletedFalse(accountDTO.getUsername()).toString());
+
         if (accountRepository.findByUsernameAndIsDeletedFalse(accountDTO.getUsername()) != null){
+            log.info("USERNAME EXIST----------------------------------------------------------------");
             throw new AlreadyExistsException("Username already exists");
         }
 
         if(accountRepository.findByEmailAndIsDeletedFalse(accountDTO.getEmail()) != null){
+            log.info("EMAIL EXIST----------------------------------------------------------------");
             throw new AlreadyExistsException("Email already in use");
         }
 
