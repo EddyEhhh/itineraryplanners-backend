@@ -223,7 +223,9 @@ public class AccountService {
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
         String password = account.getPassword();
 
-        //TODO: find some way to check oldpassword equals to new password (encoded)
+        System.out.println("Test: " + passwordEncoder.matches(changePasswordDTO.getOldPassword(), password));
+
+        //TODO: find some way to check old password equals to new password (encoded)
 
         if (changePasswordDTO.getOldPassword().equals(password)) {
             if(validPassword(changePasswordDTO.getNewPassword())) {
