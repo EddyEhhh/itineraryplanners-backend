@@ -1,15 +1,12 @@
 package com.scrapheap.itineraryplanner.service;
 
-import com.scrapheap.itineraryplanner.dto.ChangePasswordDTO;
-import com.scrapheap.itineraryplanner.dto.ForgotPasswordDTO;
-import com.scrapheap.itineraryplanner.dto.ForgotPasswordEmailDTO;
+import com.scrapheap.itineraryplanner.dto.*;
 import com.scrapheap.itineraryplanner.exception.InvalidPasswordException;
 import com.scrapheap.itineraryplanner.exception.UnauthorizedException;
 import com.scrapheap.itineraryplanner.model.ForgotPassword;
 import com.scrapheap.itineraryplanner.repository.AccountRepository;
 import com.scrapheap.itineraryplanner.repository.ForgotPasswordRepository;
 import com.scrapheap.itineraryplanner.repository.VerificationTokenRepository;
-import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
 import com.scrapheap.itineraryplanner.event.RegistrationCompleteEvent;
 import com.scrapheap.itineraryplanner.model.Account;
 import com.scrapheap.itineraryplanner.model.VerificationToken;
@@ -146,9 +143,9 @@ public class AccountService {
             throw new UnauthorizedException("No permission");
         }
 
-        AccountDetailDTO accountDetailDTO = getProfile(username);
-        accountDetailDTO.setImageId(null);
-        updateProfile(username, accountDetailDTO);
+        Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
+        account.setImageId(null);
+        accountRepository.save(account);
 
         if(accountRepository.findByUsernameAndIsDeletedFalse(username).getImageId() == null) {
             return "Profile picture of " + username + " deleted successfully.";
@@ -175,12 +172,16 @@ public class AccountService {
 
     // Saves edited profile details
     //TODO: double check imageId part
-    public String updateProfile(String username, AccountDetailDTO accountDetailDTO) {
+    public AccountUpdateDTO updateProfile(String username, AccountUpdateDTO accountUpdateDTO) {
+        if(!authenticationService.checkUsernameSession(username)){
+            throw new UnauthorizedException("account.update.error.unauthorized");
+        }
+
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
-        account.setDisplayName(accountDetailDTO.getDisplayName());
-        account.setEmail(accountDetailDTO.getEmail());
+        account.setDisplayName(accountUpdateDTO.getDisplayName());
+        account.setEmail(accountUpdateDTO.getEmail());
         accountRepository.save(account);
-        return "new account details saved";
+        return accountUpdateDTO;
     }
 
     // forgot password

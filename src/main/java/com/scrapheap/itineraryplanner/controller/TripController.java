@@ -29,8 +29,7 @@ public class TripController {
     private TripService tripService;
 
     @PostMapping
-    public ResponseEntity<TripDetailDTO> createTrip(@RequestBody @Valid TripDetailDTO tripDetailDTO) {
-        log.info(tripDetailDTO.toString());
+    public ResponseEntity<TripDetailDTO> create(@RequestBody @Valid TripDetailDTO tripDetailDTO) {
         return new ResponseEntity<>(tripService.createTrip(tripDetailDTO), HttpStatus.CREATED);
     }
 
@@ -44,17 +43,25 @@ public class TripController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TripDetailDTO> getTrip(@PathVariable("username") String username, @PathVariable("id") Long id){
+    public ResponseEntity<TripDetailDTO> get(@PathVariable("username") String username, @PathVariable("id") Long id){
         return ResponseEntity.ok(tripService.getTripById(username, id));
     }
 
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TripDetailDTO> updateTrip(@PathVariable("username") String username, @PathVariable("id") Long id, @RequestBody String tripDetailMap){
+    public ResponseEntity<TripDetailDTO> update(@PathVariable("username") String username, @PathVariable("id") Long id, @RequestBody String tripDetailMap){
 //        log.info(tripDetailMap);
 //        return null;
                 return ResponseEntity.ok(tripService.updateTrip(username, id, tripDetailMap));
     }
+
+    @DeleteMapping ("/{id}")
+    public ResponseEntity<TripDetailDTO> delete(@PathVariable("username") String username, @PathVariable("id") Long id){
+        return ResponseEntity.ok(tripService.deleteTrip(username, id));
+    }
+
+
+
 //    @GetMapping("/personal/{trip_id}")
 //    public ResponseEntity<TripDetailDTO> getTripDetail(){
 //        return ResponseEntity.ok(tripService.getUserTripBasic());

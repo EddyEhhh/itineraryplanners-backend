@@ -1,9 +1,6 @@
 package com.scrapheap.itineraryplanner.controller;
 
-import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
-import com.scrapheap.itineraryplanner.dto.ChangePasswordDTO;
-import com.scrapheap.itineraryplanner.dto.ForgotPasswordDTO;
-import com.scrapheap.itineraryplanner.dto.ForgotPasswordEmailDTO;
+import com.scrapheap.itineraryplanner.dto.*;
 import com.scrapheap.itineraryplanner.model.Account;
 import com.scrapheap.itineraryplanner.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,14 +30,13 @@ public class AccountController {
         return accountService.getAccounts();
     }
 
-    @PutMapping("/{username}/edit")
-    public ResponseEntity<?> updateAccount(@PathVariable("username")String username,
-                                           @RequestBody AccountDetailDTO accountDetailDTO) {
-        String updateAccountResponse = accountService.updateProfile(username, accountDetailDTO);
+    @PutMapping("/{username}")
+    public ResponseEntity<AccountUpdateDTO> updateAccount(@PathVariable("username")String username,
+                                                          @RequestBody AccountUpdateDTO accountUpdateDTO) {
+        AccountUpdateDTO updateAccountResponse = accountService.updateProfile(username, accountUpdateDTO);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(updateAccountResponse);
     }
-
 
     @PostMapping(value = "/{username}/imageUpload",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE

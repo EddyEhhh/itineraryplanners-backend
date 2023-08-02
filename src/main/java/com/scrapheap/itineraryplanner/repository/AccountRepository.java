@@ -17,6 +17,4 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     public Account findByForgotPassword(ForgotPassword forgotPassword);
 
 
-
-
 }

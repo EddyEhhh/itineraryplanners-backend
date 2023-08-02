@@ -90,12 +90,11 @@ public class TripService {
     public TripDetailDTO createTrip(TripDetailDTO tripDetailDTO){
 //        ArrayList<Itinerary> itinerarys = new ArrayList<>();
         Trip trip = convertToEntity(tripDetailDTO);
-        log.info("A================");
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.info("B================");
+
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
-        log.info("C================");
+
         trip.setAccount(account);
 
         tripRepository.save(trip);
@@ -225,13 +224,32 @@ public class TripService {
                 .isPublic(tripDetailDTO.isPublic())
                 .build();
 
+
         if(tripDetailDTO.getItinerarys().size() > 0){
             List<Itinerary> itineraryList = itineraryService.convertToEntityList(tripDetailDTO.getItinerarys());
             trip.setItinerarys(itineraryList);
         }
+
         return trip;
     }
 
+    public TripDetailDTO deleteTrip(String username, Long id) {
+        Trip trip = tripRepository.findById(id).get();
+        if (trip == null){
+            throw new ResourceNotFoundException("trip.resource.notfound");
+        }
+        if(!hasAccessResource(username, trip)){
+            throw new UnauthorisedResourceAccessException("trip.delete.error.unauthorised");
+        }
+        Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
+        account.getTrips().remove(trip);
+        accountRepository.save(account);
+
+        tripRepository.deleteById(id);
+
+        return convertToDTO(trip);
+
+    }
 
 
 //    public TripDetailDTO createTrip(TripDetailDTO tripDetailDTO, AccountDetailDTO accountDetailDTO){
