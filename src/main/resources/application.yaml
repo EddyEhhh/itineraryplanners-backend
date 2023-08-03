@@ -33,3 +33,13 @@ aws:
   s3:
     buckets:
       account: ip-account
+
+#cloud:
+#  aws:
+#    credentials:
+#      access-key: ${aws.access_key}
+#      secret-key: ${aws.secret_key}
+#
+#AWS_ACCESS_KEY_ID: ${aws.access_key}
+#AWS_SECRET_ACCESS_KEY: ${aws.secret_key}
+#AWS_DEFAULT_REGION: ap-southeast-1
