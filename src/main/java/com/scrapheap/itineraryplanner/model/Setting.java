@@ -22,6 +22,7 @@ public class Setting {
 
     private String language;
 
-    private String theme;
+//    private String theme;
+
 
 }

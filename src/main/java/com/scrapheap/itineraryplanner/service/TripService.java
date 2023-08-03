@@ -2,27 +2,23 @@ package com.scrapheap.itineraryplanner.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
 import com.scrapheap.itineraryplanner.dto.ItineraryDetailDTO;
-import com.scrapheap.itineraryplanner.dto.PlaceDetailDTO;
 import com.scrapheap.itineraryplanner.dto.TripDetailDTO;
 import com.scrapheap.itineraryplanner.exception.ResourceNotFoundException;
 import com.scrapheap.itineraryplanner.exception.UnauthorisedResourceAccessException;
-import com.scrapheap.itineraryplanner.model.*;
+import com.scrapheap.itineraryplanner.model.Account;
+import com.scrapheap.itineraryplanner.model.Itinerary;
+import com.scrapheap.itineraryplanner.model.Trip;
 import com.scrapheap.itineraryplanner.repository.AccountRepository;
 import com.scrapheap.itineraryplanner.repository.TripRepository;
-import com.scrapheap.itineraryplanner.util.LocalDateTimeUtil;
 import com.scrapheap.itineraryplanner.util.LocalDateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
@@ -64,13 +60,13 @@ public class TripService {
 //        return tripDetailDTO;
 //    }
 
-    public List<TripDetailDTO> getUserTrip(){
+    public List<TripDetailDTO> getUserTrip() {
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 //        Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
         return getUserTrip(currentUser);
     }
 
-    public List<TripDetailDTO> getUserTrip(String username){
+    public List<TripDetailDTO> getUserTrip(String username) {
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
         List<Trip> tripList = tripRepository.findByAccount(account);
 
@@ -79,15 +75,15 @@ public class TripService {
         return convertToDTOList(tripList);
     }
 
-    public TripDetailDTO getTripById(String username, long id){
+    public TripDetailDTO getTripById(String username, long id) {
         Trip trip = tripRepository.findById(id).get();
-        if(hasAccessResource(username, trip)){
+        if (hasAccessResource(username, trip)) {
             return convertToDTO(trip);
         }
         throw new ResourceNotFoundException("trip.resource.error.notfound");
     }
 
-    public TripDetailDTO createTrip(TripDetailDTO tripDetailDTO){
+    public TripDetailDTO createTrip(TripDetailDTO tripDetailDTO) {
 //        ArrayList<Itinerary> itinerarys = new ArrayList<>();
         Trip trip = convertToEntity(tripDetailDTO);
         log.info("A================");
@@ -103,7 +99,7 @@ public class TripService {
         return tripDetailDTO;
     }
 
-    public TripDetailDTO updateTrip(String username, long id, String tripDetailMap){
+    public TripDetailDTO updateTrip(String username, long id, String tripDetailMap) {
 
         log.info("-------------------- 0");
 
@@ -112,7 +108,7 @@ public class TripService {
 //        trip.setTitle("TEST");
 //        tripRepository.save(trip);
 
-        if(!hasAccessResource(username, trip)){
+        if (!hasAccessResource(username, trip)) {
             throw new UnauthorisedResourceAccessException();
         }
 
@@ -127,7 +123,7 @@ public class TripService {
 
 //            trip.setTitle("TEST");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info(e.getStackTrace().toString());
         }
 
@@ -139,32 +135,31 @@ public class TripService {
     }
 
 
-
-    private boolean hasAccessResource(String username, Trip trip){
+    private boolean hasAccessResource(String username, Trip trip) {
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        if(username.equals(currentUser)){
+        if (username.equals(currentUser)) {
             return true;
         }
         return trip.isPublic();
     }
 
-    private boolean hasAccessResource(String username){
+    private boolean hasAccessResource(String username) {
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info(currentUser + " " + username);
         return username.equals(currentUser);
     }
 
     //Filter another user's trip resource when accessed by user of current session
-    private List<Trip> filterByUserAccess(List<Trip> tripList, String username){
+    private List<Trip> filterByUserAccess(List<Trip> tripList, String username) {
 
-        if(hasAccessResource(username)){
+        if (hasAccessResource(username)) {
             return tripList;
         }
 
-        List<Trip>  filteredTrip = new ArrayList<>();
+        List<Trip> filteredTrip = new ArrayList<>();
 
-        for(Trip eachTrip : tripList){
-            if(eachTrip.isPublic()){
+        for (Trip eachTrip : tripList) {
+            if (eachTrip.isPublic()) {
                 filteredTrip.add(eachTrip);
             }
         }
@@ -173,14 +168,14 @@ public class TripService {
 
     }
 
-    private List<TripDetailDTO> convertToDTOList(List<Trip> trips){
+    private List<TripDetailDTO> convertToDTOList(List<Trip> trips) {
         List<TripDetailDTO> tripDetailDTOS = new ArrayList<>();
 
-        if(trips == null || trips.size() == 0){
+        if (trips == null || trips.size() == 0) {
             return null;
         }
 
-        for(Trip trip : trips){
+        for (Trip trip : trips) {
             tripDetailDTOS.add(convertToDTO(trip));
         }
 
@@ -188,9 +183,9 @@ public class TripService {
     }
 
 
-    private TripDetailDTO convertToDTO(Trip trip){
+    private TripDetailDTO convertToDTO(Trip trip) {
 
-        if(trip == null){
+        if (trip == null) {
             return null;
         }
 
@@ -205,7 +200,7 @@ public class TripService {
                 .pictureLink(trip.getPictureLink())
                 .build();
 
-        if(trip.getItinerarys().size() > 0){
+        if (trip.getItinerarys().size() > 0) {
             List<ItineraryDetailDTO> itineraryDTOList = itineraryService.convertToDTOList(trip.getItinerarys());
             tripDetailDTO.setItinerarys(itineraryDTOList);
         }
@@ -213,7 +208,7 @@ public class TripService {
         return tripDetailDTO;
     }
 
-    private Trip convertToEntity(TripDetailDTO tripDetailDTO){
+    private Trip convertToEntity(TripDetailDTO tripDetailDTO) {
         Trip trip = Trip.builder()
                 .title(tripDetailDTO.getTitle())
                 .location(tripDetailDTO.getLocation())
@@ -225,13 +220,12 @@ public class TripService {
                 .isPublic(tripDetailDTO.isPublic())
                 .build();
 
-        if(tripDetailDTO.getItinerarys().size() > 0){
+        if (tripDetailDTO.getItinerarys().size() > 0) {
             List<Itinerary> itineraryList = itineraryService.convertToEntityList(tripDetailDTO.getItinerarys());
             trip.setItinerarys(itineraryList);
         }
         return trip;
     }
-
 
 
 //    public TripDetailDTO createTrip(TripDetailDTO tripDetailDTO, AccountDetailDTO accountDetailDTO){

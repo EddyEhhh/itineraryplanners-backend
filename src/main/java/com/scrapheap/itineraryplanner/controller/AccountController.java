@@ -6,6 +6,7 @@ import com.scrapheap.itineraryplanner.dto.ForgotPasswordDTO;
 import com.scrapheap.itineraryplanner.dto.ForgotPasswordEmailDTO;
 import com.scrapheap.itineraryplanner.model.Account;
 import com.scrapheap.itineraryplanner.service.AccountService;
+import com.scrapheap.itineraryplanner.service.SettingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,9 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private SettingService settingService;
 
 //    @GetMapping
 //    public List<AccountDetailDTO> getAcccounts(){
