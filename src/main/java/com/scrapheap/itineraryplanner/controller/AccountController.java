@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/accounts")
@@ -31,13 +29,13 @@ public class AccountController {
     private SettingService settingService;
 
 //    @GetMapping
-//    public List<AccountDetailDTO> getAcccounts(){
+//    public List<AccountDetailDTO> getAccounts(){
 //        log.info(accountService.getAccounts().toString());
 //        return accountService.getAccounts();
 //    }
 
     @PutMapping("/{username}/edit")
-    public ResponseEntity<?> updateAccount(@PathVariable("username")String username,
+    public ResponseEntity<?> updateAccount(@PathVariable("username") String username,
                                            @RequestBody AccountDetailDTO accountDetailDTO) {
         String updateAccountResponse = accountService.updateProfile(username, accountDetailDTO);
         return ResponseEntity.status(HttpStatus.OK)
@@ -49,7 +47,7 @@ public class AccountController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<?> uploadProfileImage(@PathVariable("username") String username,
-                                                @RequestParam("image")MultipartFile file) throws IOException {
+                                                @RequestParam("image") MultipartFile file) throws IOException {
         String uploadImageResponse = accountService.uploadProfileImage(username, file);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(uploadImageResponse);
@@ -57,13 +55,13 @@ public class AccountController {
 
     @GetMapping(value = "/{username}/imageRetrieve"
     )
-    public String retrieveProfileImage(@PathVariable("username") String username) throws IOException{
+    public String retrieveProfileImage(@PathVariable("username") String username) throws IOException {
         return accountService.getProfileImage(username);
     }
 
 
     @DeleteMapping("/{username}/imageDelete")
-    public ResponseEntity<?> deleteProfileImage(@PathVariable String username){
+    public ResponseEntity<?> deleteProfileImage(@PathVariable String username) {
         String response = accountService.deleteProfileImage(username);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(response);
@@ -71,7 +69,7 @@ public class AccountController {
 
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{username}")
-    public void deleteAccount(@PathVariable String username){
+    public void deleteAccount(@PathVariable String username) {
         Account response = accountService.deleteAccount(username);
     }
 
@@ -102,6 +100,18 @@ public class AccountController {
                                             @RequestBody ChangePasswordDTO changePasswordDTO) {
         boolean response = accountService.changePassword(changePasswordDTO, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping(value = "/{username}/language")
+    public ResponseEntity<?> setLanguage(@RequestParam("language") String language) {
+        String languageResponse = settingService.setLanguage(language);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(languageResponse);
+    }
+
+    @GetMapping(value = "/{username}/languageRetrieve")
+    public String retrieveLanguage() {
+        return settingService.getLanguage();
     }
 
 

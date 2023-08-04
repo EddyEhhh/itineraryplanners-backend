@@ -19,11 +19,22 @@ public class SettingService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public SettingDTO getLanguage() {
+    public SettingDTO getSettingDTO() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
         Setting setting = account.getSetting();
         return convertToDTO(setting);
+    }
+
+    public String setLanguage(String language) {
+        SettingDTO settingDTO = this.getSettingDTO();
+        settingDTO.setLanguage(language);
+        return "Language set successfully";
+    }
+
+    public String getLanguage() {
+        SettingDTO settingDTO = this.getSettingDTO();
+        return settingDTO.getLanguage();
     }
 
     private SettingDTO convertToDTO(Setting setting) {
