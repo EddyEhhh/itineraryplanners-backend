@@ -228,9 +228,10 @@ public class AccountService {
 
         //TODO: find some way to check old password equals to new password (encoded)
 
-        if (changePasswordDTO.getOldPassword().equals(password)) {
+        if (passwordEncoder.matches(changePasswordDTO.getOldPassword(), password)) {
             if(validPassword(changePasswordDTO.getNewPassword())) {
-                account.setPassword(changePasswordDTO.getNewPassword());
+                account.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+                accountRepository.save(account);
                 System.out.println("password successfully changed");
                 return true;
             } else {
