@@ -7,6 +7,7 @@ import com.scrapheap.itineraryplanner.repository.AccountRepository;
 import com.scrapheap.itineraryplanner.repository.SettingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,10 +19,10 @@ public class SettingService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public SettingDTO getLanguage(String username) {
+    public SettingDTO getLanguage() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
-        Setting setting = settingRepository.findByAccount(account);
-
+        Setting setting = account.getSetting();
         return convertToDTO(setting);
     }
 
