@@ -3,6 +3,8 @@ package com.scrapheap.itineraryplanner.service;
 
 import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
 import com.scrapheap.itineraryplanner.exception.AlreadyExistsException;
+import com.scrapheap.itineraryplanner.exception.InvalidAuthenticationException;
+import com.scrapheap.itineraryplanner.exception.InvalidPasswordException;
 import com.scrapheap.itineraryplanner.exception.UnauthorizedException;
 import com.scrapheap.itineraryplanner.model.LoginAttempt;
 import com.scrapheap.itineraryplanner.model.Setting;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -65,12 +68,12 @@ public class AuthenticationService {
 
         if (accountRepository.findByUsernameAndIsDeletedFalse(accountDTO.getUsername()) != null){
             log.info("USERNAME EXIST----------------------------------------------------------------");
-            throw new AlreadyExistsException("Username already exists");
+            throw new AlreadyExistsException("authenticate.error.internal.username.exist", "username");
         }
 
         if(accountRepository.findByEmailAndIsDeletedFalse(accountDTO.getEmail()) != null){
             log.info("EMAIL EXIST----------------------------------------------------------------");
-            throw new AlreadyExistsException("Email already in use");
+            throw new AlreadyExistsException("authenticate.error.internal.email.exist", "email");
         }
 
         String defaultRole = "USER";
@@ -108,15 +111,28 @@ public class AuthenticationService {
     }
 
     public String authenticate(AccountCredentialDTO accountDTO){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        accountDTO.getUsername(),
-                        accountDTO.getPassword()
-                )
-        );
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(accountDTO.getUsername());
-        if(userDetails == null){
-            throw new UsernameNotFoundException("No user found");
+
+        UserDetails userDetails;
+        try {
+            userDetails = this.userDetailsService.loadUserByUsername(accountDTO.getUsername());
+        }catch (UsernameNotFoundException usernameNotFoundException){
+            throw new InvalidAuthenticationException("authentication.error.generic");
+        }
+
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            accountDTO.getUsername(),
+                            accountDTO.getPassword()
+                    )
+            );
+        }catch (AuthenticationException authenticationException){
+
+//            if(!passwordEncoder.matches(accountDTO.getPassword(), userDetails.getPassword())){
+//                log.info("---------- wrong password");
+////                throw new InvalidPasswordException("authentication.error.invalid.password");
+                throw new InvalidAuthenticationException("authentication.error.generic");
+
         }
 
         var jwtToken = jwtService.generateToken(userDetails);

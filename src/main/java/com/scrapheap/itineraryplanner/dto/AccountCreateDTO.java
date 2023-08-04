@@ -12,17 +12,17 @@ import lombok.Data;
 public class AccountCreateDTO {
 
 
-    @NotBlank(message = "authenticate.validation.error.display_name.blank")
+    @NotBlank(message = "authenticate.error.validation.display_name.blank")
     private String displayName;
 
-    @Email(message = "authenticate.validation.error.email.invalid")
-    @NotBlank(message = "authenticate.validation.error.email.blank")
+    @Email(message = "authenticate.error.validation.email.invalid")
+    @NotBlank(message = "authenticate.error.validation.email.blank")
     private String email;
 
-    @NotBlank(message = "authenticate.validation.error.username.blank")
+    @NotBlank(message = "authenticate.error.validation.username.blank")
     private String username;
 
-    @NotBlank(message = "authenticate.validation.error.password.blank")
+    @NotBlank(message = "authenticate.error.validation.password.blank")
     private String password;
 
 }
