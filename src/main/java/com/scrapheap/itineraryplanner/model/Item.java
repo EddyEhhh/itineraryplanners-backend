@@ -7,6 +7,7 @@ import lombok.Data;
 @Entity
 @Data
 public class Item {
+
     @Id
     private Long id;
     private int itemOrder;
