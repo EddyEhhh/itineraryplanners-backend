@@ -67,12 +67,12 @@ public class AuthenticationService {
 //        log.info("TEST: " + accountRepository.findByUsernameAndIsDeletedFalse(accountDTO.getUsername()).toString());
 
         if (accountRepository.findByUsernameAndIsDeletedFalse(accountDTO.getUsername()) != null){
-            log.info("USERNAME EXIST----------------------------------------------------------------");
+//            log.info("USERNAME EXIST----------------------------------------------------------------");
             throw new AlreadyExistsException("authenticate.error.internal.username.exist", "username");
         }
 
         if(accountRepository.findByEmailAndIsDeletedFalse(accountDTO.getEmail()) != null){
-            log.info("EMAIL EXIST----------------------------------------------------------------");
+//            log.info("EMAIL EXIST----------------------------------------------------------------");
             throw new AlreadyExistsException("authenticate.error.internal.email.exist", "email");
         }
 
