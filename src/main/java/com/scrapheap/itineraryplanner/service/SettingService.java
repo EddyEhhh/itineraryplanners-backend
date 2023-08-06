@@ -27,8 +27,13 @@ public class SettingService {
     }
 
     public String setLanguage(String language) {
-        SettingDTO settingDTO = this.getSettingDTO();
-        settingDTO.setLanguage(language);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
+        Setting setting = account.getSetting();
+        setting.setLanguage(language);
+        account.setSetting(setting);
+        accountRepository.save(account);
+
         return "Language set successfully";
     }
 
