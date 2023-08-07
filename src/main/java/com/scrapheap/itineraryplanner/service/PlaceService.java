@@ -71,6 +71,7 @@ public class PlaceService {
 
         for(Place eachPlace : places){
             PlaceDetailDTO placeDetailDTO = PlaceDetailDTO.builder()
+                    .id(eachPlace.getId())
                     .location(eachPlace.getLocation())
                     .timeStart(eachPlace.getTimeStart().toString())
                     .timeEnd(eachPlace.getTimeEnd().toString())

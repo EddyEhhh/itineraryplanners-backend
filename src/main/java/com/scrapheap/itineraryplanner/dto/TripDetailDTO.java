@@ -34,6 +34,8 @@ public class TripDetailDTO {
 
     private boolean isPublic;
 
+    private String lastUpdate;
+
     @OneToMany(
             cascade = CascadeType.ALL,
             fetch= FetchType.LAZY,

@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ItineraryDetailDTO {
 
-//    private Long id;
+    private Long id;
 
 //    private int order;
 

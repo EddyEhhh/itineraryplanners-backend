@@ -169,7 +169,7 @@ public class PopulateSampleData {
                 trip.setCurrency("USD");
                 trip.setTotalBudget(5000.00);
                 trip.setPictureLink("/beach_vacation_bali/image1");
-
+                trip.setLastUpdate(LocalDateTime.now());
                 // Create the list of Itinerary objects
                 List<Itinerary> itineraries = new ArrayList<>();
 
@@ -347,6 +347,7 @@ public class PopulateSampleData {
         trip.setTotalBudget(8000.00);
         trip.setPictureLink("/exploring_japan/image1");
         trip.setPublic(true);
+        trip.setLastUpdate(LocalDateTime.now());
 
         List<Itinerary> itineraries = new ArrayList<>();
 
@@ -469,6 +470,7 @@ public class PopulateSampleData {
         trip.setCurrency("EUR");
         trip.setTotalBudget(10000.00);
         trip.setPictureLink("/european_adventure/image1");
+        trip.setLastUpdate(LocalDateTime.now());
 
         List<Itinerary> itineraries = new ArrayList<>();
 

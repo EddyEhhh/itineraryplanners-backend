@@ -50,9 +50,12 @@ public class TripController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<TripDetailDTO> update(@PathVariable("username") String username, @PathVariable("id") Long id, @RequestBody String tripDetailMap){
-//        log.info(tripDetailMap);
-//        return null;
-                return ResponseEntity.ok(tripService.updateTrip(username, id, tripDetailMap));
+        return ResponseEntity.ok(tripService.updateTrip(username, id, tripDetailMap));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TripDetailDTO> updateOverride(@PathVariable("username") String username, @PathVariable("id") Long id, @RequestBody @Valid TripDetailDTO tripDetailDTO){
+        return ResponseEntity.ok(tripService.updateTrip(username, id, tripDetailDTO));
     }
 
     @DeleteMapping ("/{id}")

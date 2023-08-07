@@ -48,6 +48,7 @@ public class ItineraryService {
 
         for(Itinerary itinerary : itinerarys) {
             ItineraryDetailDTO itineraryDetailDTO = ItineraryDetailDTO.builder()
+                    .id(itinerary.getId())
                     .subheader(itinerary.getSubheader())
                     .places(placeService.convertToDTOList(itinerary.getPlaces()))
                     .build();

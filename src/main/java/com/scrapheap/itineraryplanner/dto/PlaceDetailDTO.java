@@ -16,7 +16,7 @@ public class PlaceDetailDTO {
 
 //    @Id
 //    @GeneratedValue(strategy= GenerationType.AUTO)
-//    private Long id;
+    private Long id;
 
 //    @NotEmpty
 //    private int itineraryOrder;

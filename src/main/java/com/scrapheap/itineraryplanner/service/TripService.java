@@ -2,27 +2,27 @@ package com.scrapheap.itineraryplanner.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.scrapheap.itineraryplanner.dto.AccountDetailDTO;
 import com.scrapheap.itineraryplanner.dto.ItineraryDetailDTO;
-import com.scrapheap.itineraryplanner.dto.PlaceDetailDTO;
 import com.scrapheap.itineraryplanner.dto.TripDetailDTO;
 import com.scrapheap.itineraryplanner.exception.ResourceNotFoundException;
 import com.scrapheap.itineraryplanner.exception.UnauthorisedResourceAccessException;
-import com.scrapheap.itineraryplanner.model.*;
+import com.scrapheap.itineraryplanner.model.Account;
+import com.scrapheap.itineraryplanner.model.Itinerary;
+import com.scrapheap.itineraryplanner.model.Trip;
 import com.scrapheap.itineraryplanner.repository.AccountRepository;
 import com.scrapheap.itineraryplanner.repository.TripRepository;
-import com.scrapheap.itineraryplanner.util.LocalDateTimeUtil;
 import com.scrapheap.itineraryplanner.util.LocalDateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
@@ -72,7 +72,7 @@ public class TripService {
 
     public List<TripDetailDTO> getUserTrip(String username){
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
-        List<Trip> tripList = tripRepository.findByAccount(account);
+        List<Trip> tripList = tripRepository.findByAccount(account, Sort.by(Sort.Order.desc("lastUpdate")));
 
         tripList = filterByUserAccess(tripList, username);
 
@@ -97,6 +97,7 @@ public class TripService {
 
         trip.setAccount(account);
 
+        trip.setLastUpdate(LocalDateTime.now());
         tripRepository.save(trip);
 //        tripRepository.save(tripDetailDTO, 1);
         return tripDetailDTO;
@@ -104,10 +105,8 @@ public class TripService {
 
     public TripDetailDTO updateTrip(String username, long id, String tripDetailMap){
 
-        log.info("-------------------- 0");
 
         Trip trip = tripRepository.findById(id).get();
-
 //        trip.setTitle("TEST");
 //        tripRepository.save(trip);
 
@@ -130,6 +129,7 @@ public class TripService {
             log.info(e.getStackTrace().toString());
         }
 
+        trip.setLastUpdate(LocalDateTime.now());
         tripRepository.save(trip);
 
 //        tripDetailDTO = convertToDTO(tripRepository.findById(id).get());
@@ -137,6 +137,30 @@ public class TripService {
         return convertToDTO(trip);
     }
 
+    public TripDetailDTO updateTrip(String username, long id, TripDetailDTO tripDetailDTO){
+
+
+        Trip trip = tripRepository.findById(id).get();
+
+        if(!hasAccessResource(username, trip)){
+            throw new UnauthorisedResourceAccessException();
+        }
+
+
+        trip = convertToEntity(tripDetailDTO);
+        trip.setId(id);
+
+        Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
+
+        trip.setAccount(account);
+
+        trip.setLastUpdate(LocalDateTime.now());
+        tripRepository.save(trip);
+
+//        tripDetailDTO = convertToDTO(tripRepository.findById(id).get());
+
+        return convertToDTO(trip);
+    }
 
 
     private boolean hasAccessResource(String username, Trip trip){
@@ -202,6 +226,7 @@ public class TripService {
                 .currency(trip.getCurrency())
                 .totalBudget(trip.getTotalBudget())
                 .pictureLink(trip.getPictureLink())
+                .lastUpdate(trip.getLastUpdate().toString())
                 .build();
 
         if(trip.getItinerarys().size() > 0){
