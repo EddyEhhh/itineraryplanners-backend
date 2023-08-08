@@ -46,12 +46,13 @@ public class AuthenticationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> authenticate(@RequestBody @Valid AccountCredentialDTO accountDTO, final HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<AccountDetailDTO> authenticate(@RequestBody @Valid AccountCredentialDTO accountDTO, final HttpServletRequest request, HttpServletResponse response) {
         String applicationUrl = getApplicationUrl(request);
 //        AuthenticationResponseDTO authenticationResponse = authenticationService.authenticate(accountDTO);
 //        response.setHeader("Authorization", authenticationResponse.getToken());
 
         String authenticationResponse = authenticationService.authenticate(accountDTO);
+        AccountDetailDTO accountInfo = authenticationService.getAccountDetail(accountDTO.getUsername());
 //        Cookie cookieJwt = new Cookie("token", authenticationResponse.getToken());
 //        cookieJwt.setMaxAge(300);
 //        cookieJwt.setHttpOnly(true);
@@ -59,7 +60,7 @@ public class AuthenticationController {
 //        response.addCookie(cookieJwt);
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, authenticationResponse)
-                .body("Success");
+                .body(accountInfo);
     }
 
 //    public ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody @Valid AccountCredentialDTO accountDTO, final HttpServletRequest request, HttpServletResponse response) {

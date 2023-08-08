@@ -79,6 +79,15 @@ public class TripService {
         return convertToDTOList(tripList);
     }
 
+    public List<TripDetailDTO> getUserUpcomingTrip(String username){
+        Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
+        List<Trip> tripList = tripRepository.findByAccount(account, Sort.by(Sort.Order.asc("startDate")));
+
+        tripList = filterByUserAccess(tripList, username);
+
+        return convertToDTOList(tripList);
+    }
+
     public TripDetailDTO getTripById(String username, long id){
         Trip trip = tripRepository.findById(id).get();
         if(hasAccessResource(username, trip)){

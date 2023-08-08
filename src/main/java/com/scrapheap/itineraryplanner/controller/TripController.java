@@ -42,6 +42,11 @@ public class TripController {
         return ResponseEntity.ok(tripService.getUserTrip(username));
     }
 
+    @GetMapping("/upcoming")
+    public ResponseEntity<List<TripDetailDTO>> getUserUpcomingTrip(@PathVariable("username") String username){
+        return ResponseEntity.ok(tripService.getUserUpcomingTrip(username));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TripDetailDTO> get(@PathVariable("username") String username, @PathVariable("id") Long id){
         return ResponseEntity.ok(tripService.getTripById(username, id));
