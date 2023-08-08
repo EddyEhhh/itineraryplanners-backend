@@ -35,7 +35,7 @@ public class Account {
     @NotEmpty
     private String password;
 
-    @Column(unique = true)
+//    @Column(unique = true)
     private String imageId;
 
     private LocalDateTime created;

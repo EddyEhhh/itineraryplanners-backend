@@ -151,6 +151,7 @@ public class PopulateSampleData {
                 loginAttempt(loginAttempt).
                 setting(setting).
                 role(defaultRole).
+                imageId("0b47db0e-234e-4fdb-bb93-d5580fbe6cf2").
 //                    forgotPassword(forgotPassword1).
 //                    session(session1).
                 build();
@@ -165,7 +166,7 @@ public class PopulateSampleData {
                 trip.setTitle("Beach Vacation in Bali");
                 trip.setLocation("Bali, Indonesia");
                 trip.setStartDate(LocalDateUtil.parseDate("2023-08-10"));
-                trip.setEndDate(LocalDateUtil.parseDate("2023-08-13"));
+                trip.setEndDate(LocalDateUtil.parseDate("2023-08-12"));
                 trip.setCurrency("USD");
                 trip.setTotalBudget(5000.00);
                 trip.setPictureLink("/beach_vacation_bali/image1");
@@ -342,7 +343,7 @@ public class PopulateSampleData {
         trip.setTitle("Exploring Japan");
         trip.setLocation("Japan, Tokyo");
         trip.setStartDate(LocalDateUtil.parseDate("2023-10-20"));
-        trip.setEndDate(LocalDateUtil.parseDate("2023-10-23"));
+        trip.setEndDate(LocalDateUtil.parseDate("2023-10-22"));
         trip.setCurrency("JPY");
         trip.setTotalBudget(8000.00);
         trip.setPictureLink("/exploring_japan/image1");

@@ -3,6 +3,8 @@ package com.scrapheap.itineraryplanner.dto;
 import com.scrapheap.itineraryplanner.model.Account;
 import com.scrapheap.itineraryplanner.model.Itinerary;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +24,10 @@ public class TripDetailDTO {
 
     private String location;
 
+    @NotNull
     private String startDate;
 
+    @NotNull
     private String endDate;
 
     private String currency;

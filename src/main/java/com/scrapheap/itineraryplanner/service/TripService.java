@@ -6,23 +6,28 @@ import com.scrapheap.itineraryplanner.dto.ItineraryDetailDTO;
 import com.scrapheap.itineraryplanner.dto.TripDetailDTO;
 import com.scrapheap.itineraryplanner.exception.ResourceNotFoundException;
 import com.scrapheap.itineraryplanner.exception.UnauthorisedResourceAccessException;
+import com.scrapheap.itineraryplanner.exception.UnauthorizedException;
 import com.scrapheap.itineraryplanner.model.Account;
 import com.scrapheap.itineraryplanner.model.Itinerary;
 import com.scrapheap.itineraryplanner.model.Trip;
 import com.scrapheap.itineraryplanner.repository.AccountRepository;
 import com.scrapheap.itineraryplanner.repository.TripRepository;
+import com.scrapheap.itineraryplanner.s3.S3Buckets;
+import com.scrapheap.itineraryplanner.s3.S3Service;
 import com.scrapheap.itineraryplanner.util.LocalDateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -39,6 +44,12 @@ public class TripService {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private S3Service s3Service;
+
+    @Autowired
+    private S3Buckets s3Buckets;
 
 //    public List<Trip> getAllTripFromUsername(String username){
 //
@@ -90,6 +101,7 @@ public class TripService {
 
     public TripDetailDTO getTripById(String username, long id){
         Trip trip = tripRepository.findById(id).get();
+        log.info("HAS ACCESS: " + username);
         if(hasAccessResource(username, trip)){
             return convertToDTO(trip);
         }
@@ -100,6 +112,8 @@ public class TripService {
 //        ArrayList<Itinerary> itinerarys = new ArrayList<>();
         Trip trip = convertToEntity(tripDetailDTO);
 
+        generateItinerary(trip);
+
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
@@ -109,7 +123,34 @@ public class TripService {
         trip.setLastUpdate(LocalDateTime.now());
         tripRepository.save(trip);
 //        tripRepository.save(tripDetailDTO, 1);
-        return tripDetailDTO;
+        return convertToDTO((trip));
+    }
+
+    public Trip generateItinerary(Trip trip){
+
+        long numOfItinerary = ChronoUnit.DAYS.between(trip.getStartDate(), trip.getEndDate()) + 1;
+
+        if(trip.getItinerarys() != null && trip.getItinerarys().size() == numOfItinerary){
+            return trip;
+        }
+
+        if(trip.getItinerarys() == null || trip.getItinerarys().size() == 0){
+            List<Itinerary> itineraries = new ArrayList<>();
+            for(int itineraryIndex = 0 ; itineraryIndex < numOfItinerary ; itineraryIndex++){
+                itineraries.add(new Itinerary());
+            }
+
+            trip.setItinerarys(itineraries);
+        }else if(trip.getItinerarys().size() < numOfItinerary){
+            long numOfItineraryToGenerate = numOfItinerary - trip.getItinerarys().size();
+            for(int itineraryIndex = 0 ; itineraryIndex < numOfItineraryToGenerate ; itineraryIndex++){
+                trip.getItinerarys().add(new Itinerary());
+            }
+        }
+
+
+        log.info("TESTING ----- " + numOfItinerary);
+        return trip;
     }
 
     public TripDetailDTO updateTrip(String username, long id, String tripDetailMap){
@@ -138,6 +179,8 @@ public class TripService {
             log.info(e.getStackTrace().toString());
         }
 
+        generateItinerary(trip);
+
         trip.setLastUpdate(LocalDateTime.now());
         tripRepository.save(trip);
 
@@ -159,6 +202,8 @@ public class TripService {
         trip = convertToEntity(tripDetailDTO);
         trip.setId(id);
 
+        generateItinerary(trip);
+
         Account account = accountRepository.findByUsernameAndIsDeletedFalse(username);
 
         trip.setAccount(account);
@@ -169,6 +214,61 @@ public class TripService {
 //        tripDetailDTO = convertToDTO(tripRepository.findById(id).get());
 
         return convertToDTO(trip);
+    }
+
+
+
+    public String uploadTripImage(String username, long id, MultipartFile file)throws IOException {
+
+        if(!hasAccessResource(username)){
+            throw new UnauthorizedException("No permission");
+        }
+
+        String imageUUID = UUID.randomUUID().toString();
+        //puts into aws
+        try {
+            s3Service.putObject(
+                    s3Buckets.getAccount(),
+                    "trip-images/%s/%s".formatted(username, imageUUID),
+                    file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Trip trip = tripRepository.findById(id).get();
+        trip.setPictureLink(imageUUID);
+        tripRepository.save(trip);
+
+        return "File uploaded Successfully";
+    }
+
+    public String getTripImage(String username, long id) throws IOException{
+        Trip trip = tripRepository.findById(id).get();
+        if(trip == null || !hasAccessResource(username, trip)){
+            throw new UnauthorizedException("No permission");
+        }
+
+//        if(account.getImageId().isBlank()){
+//            throw new RuntimeException("account profile image not found");
+//        }
+
+        String imageUUID = trip.getPictureLink();
+        return "https://ip-account.s3.ap-southeast-1.amazonaws.com/trip-images/" + username + "/" + imageUUID;
+        // return s3Service.getObject(s3Buckets.getAccount(), "profile-images/%s/%s".formatted(username, profileImageId));
+    }
+
+
+    public String deleteTripImage(String username, long id){
+        //TODO: implement this
+        if(!hasAccessResource(username)){
+            throw new UnauthorizedException("No permission");
+        }
+
+        Trip trip = tripRepository.findById(id).get();
+        trip.setPictureLink(null);
+        tripRepository.save(trip);
+
+        return "Success";
     }
 
 
@@ -238,7 +338,7 @@ public class TripService {
                 .lastUpdate(trip.getLastUpdate().toString())
                 .build();
 
-        if(trip.getItinerarys().size() > 0){
+        if(trip.getItinerarys() != null && trip.getItinerarys().size() > 0){
             List<ItineraryDetailDTO> itineraryDTOList = itineraryService.convertToDTOList(trip.getItinerarys());
             tripDetailDTO.setItinerarys(itineraryDTOList);
         }
@@ -259,7 +359,8 @@ public class TripService {
                 .build();
 
 
-        if(tripDetailDTO.getItinerarys().size() > 0){
+
+        if(tripDetailDTO.getItinerarys() != null && tripDetailDTO.getItinerarys().size() > 0){
             List<Itinerary> itineraryList = itineraryService.convertToEntityList(tripDetailDTO.getItinerarys());
             trip.setItinerarys(itineraryList);
         }

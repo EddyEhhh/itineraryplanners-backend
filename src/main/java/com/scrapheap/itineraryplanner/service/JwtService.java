@@ -24,7 +24,8 @@ public class JwtService {
     private static final int MILLIS_IN_SECONDS = 1000;
     private static final int SECONDS_IN_MINUTE = 60;
 
-    private int jwtValidityInMinute = 15;
+    //Change to 5
+    private int jwtValidityInMinute = 30;
 
 
     public String extractUsername(String token){

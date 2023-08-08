@@ -12,9 +12,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +52,7 @@ public class TripController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TripDetailDTO> get(@PathVariable("username") String username, @PathVariable("id") Long id){
+        log.info("ID RECIEVED: " + id);
         return ResponseEntity.ok(tripService.getTripById(username, id));
     }
 
@@ -67,6 +71,33 @@ public class TripController {
     public ResponseEntity<TripDetailDTO> delete(@PathVariable("username") String username, @PathVariable("id") Long id){
         return ResponseEntity.ok(tripService.deleteTrip(username, id));
     }
+
+    @PostMapping(value = "/{id}/imageUpload",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<?> uploadTripImage(@PathVariable("username") String username,
+                                             @PathVariable("id") long id,
+                                                @RequestParam("image") MultipartFile file) throws IOException {
+        String uploadImageResponse = tripService.uploadTripImage(username, id, file);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(uploadImageResponse);
+    }
+
+    @GetMapping(value = "/{id}/imageRetrieve"
+    )
+    public String retrieveTripImage(@PathVariable("username") String username,
+                                    @PathVariable("id") long id) throws IOException{
+        return tripService.getTripImage(username, id);
+    }
+
+
+    @DeleteMapping("/{id}/imageDelete")
+    public ResponseEntity<?> deleteProfileImage(@PathVariable("username") String username,
+                                        @PathVariable("id") long id) {
+        String response = tripService.deleteTripImage(username, id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 
 
 

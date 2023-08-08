@@ -63,7 +63,7 @@ public class PlaceService {
 
     public List<PlaceDetailDTO> convertToDTOList(List<Place> places) {
 
-        if(places.size() == 0 || places == null){
+        if(places == null || places.size() == 0){
             return null;
         }
 
